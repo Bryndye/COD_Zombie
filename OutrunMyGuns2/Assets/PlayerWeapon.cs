@@ -1,13 +1,13 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using TMPro;
 
 public class PlayerWeapon : MonoBehaviour
 {
     [Header("Pos weapons")]
     [SerializeField] Transform defaultPos, aimPos;
+    [SerializeField] Transform weaponListT;
 
     [Header("Mes Armes")]
     [SerializeField] Transform camTransform;
@@ -20,6 +20,10 @@ public class PlayerWeapon : MonoBehaviour
 
     void Start()
     {
+        for (int i = 0; i < weaponListT.childCount; i++)
+        {
+            MyWeapons.Add(weaponListT.GetChild(i).GetComponent<Weapon>());
+        }
         currentWeapon = MyWeapons.FirstOrDefault();
     }
 
@@ -35,16 +39,16 @@ public class PlayerWeapon : MonoBehaviour
         {
             Fire();
         }
-        if (Input.GetAxisRaw("Reload") != 0)
+        if (Input.GetKeyDown(KeyCode.R))
         {
             Reload();
         }
-        if (Input.GetAxisRaw("Scroll") > 0)
+        if (Input.GetKeyDown(KeyCode.A))
         {
             Scroll();
         }
-        //Aim();
-        if (Input.GetAxisRaw("Cut") != 0)
+        Aim();
+        if (Input.GetKeyDown(KeyCode.F))
         {
             Cut();
         }
@@ -104,13 +108,13 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Aim()
     {
-        if (Input.GetAxisRaw("Aim") > 0)
+        if (Input.GetKey(KeyCode.Mouse1))
         {
-            Vector3.Lerp(currentWeapon.transform.localPosition, aimPos.position, 1);
+            Vector3.Lerp(currentWeapon.transform.localPosition, aimPos.localPosition, 0.01f);
         }
         else
         {
-            Vector3.Lerp(currentWeapon.transform.localPosition, defaultPos.position, 1);
+            Vector3.Lerp(currentWeapon.transform.localPosition, defaultPos.localPosition, 0.01f);
         }
     }
 

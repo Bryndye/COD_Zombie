@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -94,21 +93,4 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    #region Input Manager
-    public void OnMove(InputAction.CallbackContext ctx)
-    {
-        movementInput = ctx.ReadValue<Vector2>();
-    }
-
-    public void GetRotation(InputAction.CallbackContext ctx)
-    {
-        Rotation = ctx.ReadValue<Vector2>();
-    }
-
-    public void OnJump(InputAction.CallbackContext ctx)
-    {
-        Jump();
-    }
-    #endregion
 }
