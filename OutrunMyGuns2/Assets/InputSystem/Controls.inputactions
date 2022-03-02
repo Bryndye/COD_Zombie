@@ -47,7 +47,7 @@
                     "id": "9850d755-4297-48a1-acfc-99ce54dae780",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
@@ -56,7 +56,7 @@
                     "id": "9d48ff51-b963-4038-abd1-1eefde57974f",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
@@ -66,6 +66,15 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Switch",
+                    "type": "Button",
+                    "id": "3d87ea09-6757-4ec8-9bb6-eca9e24a1787",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 }
             ],
@@ -265,6 +274,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Cut",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a7f0f7ae-a722-48a9-8559-957d47a93b20",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Switch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "23009957-208c-4d13-8d5e-f918bbaae23b",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Switch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

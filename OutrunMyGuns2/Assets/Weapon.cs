@@ -12,7 +12,7 @@ public class Weapon : MonoBehaviour
     public int MunitionsMaxStock = 80;
     public int MunitionsMaxChargeur = 8;
     public int MunitionsStock = 36, MunitionChargeur = 8;
-
+    [HideInInspector] public bool isReloading = false;
     [Header("Fire")]
     public bool CanShoot = false;
     public int BulletsPerShoot = 1;
@@ -28,7 +28,11 @@ public class Weapon : MonoBehaviour
 
     private void Update()
     {
-        if (!CanShoot)
+        if (isReloading)
+        {
+            CanShoot = false;
+        }
+        else if (!CanShoot && MunitionChargeur > 0)
         {
             TimeToShoot += Time.deltaTime;
             if (TimeToShoot >= FireRate)
@@ -42,6 +46,7 @@ public class Weapon : MonoBehaviour
     {
         if (Anim != null)
         {
+            isReloading = true;
             Anim.SetTrigger("Reload");
         }
         else
@@ -52,9 +57,18 @@ public class Weapon : MonoBehaviour
 
     private void GetAmmo()
     {
-        MunitionsStock += MunitionChargeur;
+        int _needAmmo = MunitionsMaxChargeur - MunitionChargeur;
+        MunitionsStock -= _needAmmo;
+        MunitionChargeur += _needAmmo;
+
+        isReloading = false;
+    }
+
+
+    public void MaxAmmo()
+    {
+        MunitionsStock = MunitionsMaxStock;
         MunitionChargeur = MunitionsMaxChargeur;
-        MunitionsStock -= MunitionsMaxStock;
     }
 
 }

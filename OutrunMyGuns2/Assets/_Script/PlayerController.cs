@@ -41,12 +41,15 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         CameraLook();
+        Movement();
+        Jump();
     }
 
     private void CameraLook()
     {
-        rotY += Rotation.y * -cameraSensibility * Time.deltaTime;
-        transform.localEulerAngles += new Vector3(0, Rotation.x * cameraSensibility * Time.deltaTime, 0);
+        Rotation = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        rotY += Rotation.y * -cameraSensibility;
+        transform.localEulerAngles += new Vector3(0, Rotation.x * cameraSensibility, 0);
 
         rotY = Mathf.Clamp(rotY, minMaxVerticalValues.x, minMaxVerticalValues.y);
         cameraTransform.transform.localRotation = Quaternion.Euler(rotY, 0, 0);
@@ -57,7 +60,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //Debug.Log(InputSystem.onDeviceChange);
-        Movement();
         Gravity();
     }
 
@@ -73,19 +75,18 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-        //if (!controller.isGrounded)
-        //{
-        //    return;
-        //}
-        Vector3 _moveDirection = new Vector3(movementInput.x, 0, movementInput.y);
+        Vector3 _moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         _moveDirection = transform.TransformDirection(_moveDirection);
         controller.Move(_moveDirection * Speed * Time.deltaTime);
-
     }
 
     private void Jump()
     {
-        if (controller.isGrounded)
+        if (!controller.isGrounded)
+        {
+            return;
+        }
+        if (Input.GetAxisRaw("Jump") > 0)
         {
             //velocity = new Vector3(controller.velocity.x, Mathf.Sqrt(JumpHeight * -2f * gravity), controller.velocity.z);
             velocity.y = Mathf.Sqrt(JumpHeight * -2f * gravity);
