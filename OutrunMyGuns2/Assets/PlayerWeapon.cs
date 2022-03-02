@@ -86,12 +86,19 @@ public class PlayerWeapon : MonoBehaviour
         currentWeapon.MunitionChargeur--;
         for (int i = 0; i < currentWeapon.BulletsPerShoot; i++)
         {
-            float _rng = Random.Range(-currentWeapon.Precision, currentWeapon.Precision);
+            float x = Random.Range(-currentWeapon.Precision, currentWeapon.Precision);
+            float y = Random.Range(-currentWeapon.Precision, currentWeapon.Precision);
+
+            Vector3 _direction = camTransform.forward + new Vector3(x, y, 0);
+
             RaycastHit hit;
-            if (Physics.Raycast(camTransform.position, camTransform.forward, out hit))
+            if (Physics.Raycast(camTransform.position, _direction, out hit))
             {
                 Debug.Log(hit.collider);
-                //hit.collider.TryGetComponent(out );
+                if (hit.collider.TryGetComponent(out ZombieBehaviour _zb))
+                {
+                    _zb.TakeDamage(currentWeapon.Damage);
+                }
             }
         }
         currentWeapon.CanShoot = false;

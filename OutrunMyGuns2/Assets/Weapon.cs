@@ -13,8 +13,10 @@ public class Weapon : MonoBehaviour
     public int MunitionsMaxChargeur = 8;
     public int MunitionsStock = 36, MunitionChargeur = 8;
     [HideInInspector] public bool isReloading = false;
+    
     [Header("Fire")]
     public bool CanShoot = false;
+    public int Damage = 10;
     public int BulletsPerShoot = 1;
     public float FireRate = 0.4f, TimeToShoot = 0;
     [Tooltip("Plus proche de 1 plus precis, plus proche de 0 moins precis")] 
