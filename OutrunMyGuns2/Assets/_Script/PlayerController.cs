@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //Debug.Log(InputSystem.onDeviceChange);
         Movement();
         Gravity();
     }
@@ -80,7 +81,6 @@ public class PlayerController : MonoBehaviour
         _moveDirection = transform.TransformDirection(_moveDirection);
         controller.Move(_moveDirection * Speed * Time.deltaTime);
 
-        Debug.Log(controller.velocity.z);
     }
 
     private void Jump()
