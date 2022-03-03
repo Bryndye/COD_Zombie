@@ -5,6 +5,8 @@ using TMPro;
 
 public class PlayerWeapon : MonoBehaviour
 {
+    StressReceiver camShake;
+
     [Header("Pos weapons")]
     [SerializeField] Transform defaultPos, aimPos;
     [SerializeField] Transform weaponListT;
@@ -17,6 +19,11 @@ public class PlayerWeapon : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] TextMeshProUGUI WeaponNameT, MunChargT, MunStockT;
+
+    private void Awake()
+    {
+        camShake = GetComponentInChildren<StressReceiver>();
+    }
 
     void Start()
     {
@@ -35,10 +42,21 @@ public class PlayerWeapon : MonoBehaviour
 
     void InputManager()
     {
-        if (Input.GetAxisRaw("Fire1") != 0)
+        if (currentWeapon.canHold)
         {
-            Fire();
+            if (Input.GetAxisRaw("Fire1") != 0)
+            {
+                Fire();
+            }
         }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                Fire();
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             Reload();
@@ -60,6 +78,7 @@ public class PlayerWeapon : MonoBehaviour
         MunChargT.text = currentWeapon.MunitionChargeur.ToString();
         MunStockT.text = currentWeapon.MunitionsStock.ToString();
     }
+
 
     #region Input Handler
     public void Scroll()
@@ -83,6 +102,7 @@ public class PlayerWeapon : MonoBehaviour
         if (!currentWeapon.CanShoot)
             return;
 
+        camShake.InduceStress(0.05f); //pas sur de garder le shake !
         currentWeapon.MunitionChargeur--;
         for (int i = 0; i < currentWeapon.BulletsPerShoot; i++)
         {
@@ -94,7 +114,7 @@ public class PlayerWeapon : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(camTransform.position, _direction, out hit))
             {
-                Debug.Log(hit.collider);
+                //Debug.Log(hit.collider);
                 if (hit.collider.TryGetComponent(out ZombieBehaviour _zb))
                 {
                     _zb.TakeDamage(currentWeapon.Damage);

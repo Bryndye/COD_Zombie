@@ -21,7 +21,12 @@ public class PlayerLife : MonoBehaviour
 
     void UpdateUILife()
     {
-        bloodScreen.color = new Color(255,255,255, (1/Life / LifeMax) * 255);
+        float _alpha = 1 - Life / LifeMax;
+
+        if (_alpha > 255)  _alpha = 255;
+        else if (_alpha < 0)  _alpha = 0;
+
+        bloodScreen.color = new Color(1,1,1, _alpha);
     }
 
     public void TakeDamage(int _dmg)

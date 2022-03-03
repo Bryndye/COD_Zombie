@@ -15,7 +15,8 @@ public class Weapon : MonoBehaviour
     [HideInInspector] public bool isReloading = false;
     
     [Header("Fire")]
-    public bool CanShoot = false;
+    [HideInInspector] public bool CanShoot = false;
+    public bool canHold = true;
     public int Damage = 10;
     public int BulletsPerShoot = 1;
     public float FireRate = 0.4f, TimeToShoot = 0;

@@ -5,16 +5,16 @@ using UnityEngine.AI;
 
 public enum ZombieStates
 {
-    NoSpawned,
-    Spawning,
     Walk,
     ThroughWall,
-    Attack
+    Attack,
+    Dead
 }
 public class ZombieBehaviour : MonoBehaviour
 {
     NavMeshAgent nav;
     Animator anim;
+    CapsuleCollider cc;
     public ZombieStates MyState;
     public Transform Target;
 
@@ -33,11 +33,17 @@ public class ZombieBehaviour : MonoBehaviour
     {
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
+        cc = GetComponent<CapsuleCollider>();
+    }
+
+    private void Start()
+    {
+        bool _isWalk = Random.Range(0, 2) == 1 ? true : false;
+        anim.SetBool("WalkWay1",_isWalk);
     }
 
     void Update()
     {
-        Attack();
         ManageState();
     }
 
@@ -45,12 +51,11 @@ public class ZombieBehaviour : MonoBehaviour
     {
         switch (MyState)
         {
-            case ZombieStates.NoSpawned:
-                break;
-            case ZombieStates.Spawning:
+            case ZombieStates.Dead:
                 break;
             case ZombieStates.Walk:
                 nav.SetDestination(Target.position);
+                Attack();
                 break;
             case ZombieStates.ThroughWall:
                 break;
@@ -73,14 +78,24 @@ public class ZombieBehaviour : MonoBehaviour
                 MyState = ZombieStates.Attack;
                 nav.isStopped = true;
                 anim.SetTrigger("Attack");
-                _pLife.TakeDamage(50);
-
-                Invoke(nameof(BackToNormalState), 2f);
             }
         }
     }
 
-    void BackToNormalState()
+    public void Scratch()
+    {
+        RaycastHit hit;
+        Vector3 pos = sphereTrigger + transform.position;
+        if (Physics.SphereCast(spherePos, radius, transform.forward, out hit, radius))
+        {
+            if (hit.collider.TryGetComponent(out PlayerLife _pLife))
+            {
+                _pLife.TakeDamage(50);
+            }
+        }
+    }
+
+    public void BackToNormalState()
     {
         nav.isStopped = false;
         MyState = ZombieStates.Walk;
@@ -91,8 +106,17 @@ public class ZombieBehaviour : MonoBehaviour
 
         if (Life <= 0)
         {
-            Debug.Log("MORT ");
+            DyingReviving(true);
         }
+    }
+
+    public void DyingReviving(bool _active)
+    {
+        Debug.Log("MORT ");
+        MyState = ZombieStates.Dead;
+        anim.SetTrigger("Dying");
+        nav.isStopped = _active;
+        cc.enabled = !_active;
     }
 
     private void OnDrawGizmos()
