@@ -12,16 +12,22 @@ public class Weapon : MonoBehaviour
     public int MunitionsMaxStock = 80;
     public int MunitionsMaxChargeur = 8;
     public int MunitionsStock = 36, MunitionChargeur = 8;
-    [HideInInspector] public bool isReloading = false;
+    [HideInInspector] public bool IsReloading = false;
     
     [Header("Fire")]
-    [HideInInspector] public bool CanShoot = false;
-    public bool canHold = true;
     public int Damage = 10;
     public int BulletsPerShoot = 1;
     public float FireRate = 0.4f, TimeToShoot = 0;
+    [HideInInspector] public bool CanShoot = false;
+    public bool canHold = true;
     [Tooltip("Plus proche de 1 plus precis, plus proche de 0 moins precis")] 
     public float Precision = 0.8f;
+
+    [Header("Recoil")]
+    public Vector3 recoil;
+    public float snapiness, returnSpeed;
+
+    public Transform AimPos;
 
     private void OnEnable()
     {
@@ -31,7 +37,7 @@ public class Weapon : MonoBehaviour
 
     private void Update()
     {
-        if (isReloading)
+        if (IsReloading)
         {
             CanShoot = false;
         }
@@ -49,7 +55,7 @@ public class Weapon : MonoBehaviour
     {
         if (Anim != null)
         {
-            isReloading = true;
+            IsReloading = true;
             Anim.SetTrigger("Reload");
         }
         else
@@ -64,7 +70,7 @@ public class Weapon : MonoBehaviour
         MunitionsStock -= _needAmmo;
         MunitionChargeur += _needAmmo;
 
-        isReloading = false;
+        IsReloading = false;
     }
 
 

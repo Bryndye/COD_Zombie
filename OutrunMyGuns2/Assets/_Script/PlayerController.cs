@@ -23,11 +23,14 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Movement")]
+    public bool IsRunning = false;
     Vector3 velocity;
     private Vector2 movementInput;
     public float Speed = 5f;
 
     [Header("Jump")]
+    public LayerMask LayerGround;
+    bool isGrounded;
     [SerializeField] float gravity;
     public float JumpHeight = 2f;
 
@@ -40,6 +43,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         CameraLook();
+        OnTheGround();
         Movement();
         Jump();
     }
@@ -62,6 +66,11 @@ public class PlayerController : MonoBehaviour
         Gravity();
     }
 
+    private void OnTheGround()
+    {
+        isGrounded = Physics.CheckSphere(transform.position - Vector3.up, 0.3f, LayerGround);
+    }
+
     private void Gravity()
     {
         if (controller.isGrounded && velocity.y < 0)
@@ -81,7 +90,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (!controller.isGrounded)
+        if (!isGrounded)
         {
             return;
         }
@@ -89,6 +98,7 @@ public class PlayerController : MonoBehaviour
         {
             //velocity = new Vector3(controller.velocity.x, Mathf.Sqrt(JumpHeight * -2f * gravity), controller.velocity.z);
             velocity.y = Mathf.Sqrt(JumpHeight * -2f * gravity);
+            Debug.Log(velocity);
             controller.Move(velocity * Time.deltaTime);
         }
     }

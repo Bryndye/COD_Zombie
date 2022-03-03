@@ -25,7 +25,7 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] Vector3 sphereTrigger;
     Vector3 spherePos
     {
-        get { return transform.position + sphereTrigger; }
+        get { return transform.position + transform.forward + sphereTrigger; }
     }
     [SerializeField] float radius = 0.2f;
 

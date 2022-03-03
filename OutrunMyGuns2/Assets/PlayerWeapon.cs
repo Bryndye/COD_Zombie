@@ -6,23 +6,35 @@ using TMPro;
 public class PlayerWeapon : MonoBehaviour
 {
     StressReceiver camShake;
+    PlayerController playerCtrl;
 
     [Header("Pos weapons")]
+    public bool IsAiming = false;
     [SerializeField] Transform defaultPos, aimPos;
     [SerializeField] Transform weaponListT;
+    [SerializeField] CameraRecoil camRecoil;
+
 
     [Header("Mes Armes")]
     [SerializeField] Transform camTransform;
     [SerializeField] Animator animHands;
     public List<Weapon> MyWeapons;
-    [SerializeField] Weapon currentWeapon;
+    public Weapon currentWeapon;
+
+    [Header("Scope")]
+    public float initFov;
+    [SerializeField] Camera camWeapon;
+    Vector3 difference;
 
     [Header("UI")]
-    [SerializeField] TextMeshProUGUI WeaponNameT, MunChargT, MunStockT;
+    [SerializeField] TextMeshProUGUI WeaponNameT;
+    [SerializeField] TextMeshProUGUI MunChargT;
+    [SerializeField] TextMeshProUGUI MunStockT;
 
     private void Awake()
     {
         camShake = GetComponentInChildren<StressReceiver>();
+        playerCtrl = GetComponent<PlayerController>();
     }
 
     void Start()
@@ -32,6 +44,8 @@ public class PlayerWeapon : MonoBehaviour
             MyWeapons.Add(weaponListT.GetChild(i).GetComponent<Weapon>());
         }
         currentWeapon = MyWeapons.FirstOrDefault();
+
+        //initFov = camWeapon.fieldOfView;
     }
 
     void Update()
@@ -79,11 +93,24 @@ public class PlayerWeapon : MonoBehaviour
         MunStockT.text = currentWeapon.MunitionsStock.ToString();
     }
 
+    #region Recoil
+    [Header("Recoil")]
+    public Transform RecoilHolder, RecoilHolderCam;
+
+    Vector3 CurrentRecoil1, CurrentRecoil2, CurrentRecoil3, CurrentRecoil4;
+
+    public float upRecoil, sideRocoil;
+
+    private void Recoil()
+    {
+
+    }
+    #endregion
+
 
     #region Input Handler
     public void Scroll()
     {
-        Debug.Log("bo");
         int _index = MyWeapons.IndexOf(currentWeapon) + 1;
         if (_index >= MyWeapons.Count)
         {
@@ -95,6 +122,9 @@ public class PlayerWeapon : MonoBehaviour
         }
         currentWeapon = MyWeapons[_index];
         currentWeapon.gameObject.SetActive(true);
+
+        difference = new Vector3(0, aimPos.position.y - currentWeapon.AimPos.position.y, 0);
+
     }
 
     public void Fire()
@@ -102,7 +132,9 @@ public class PlayerWeapon : MonoBehaviour
         if (!currentWeapon.CanShoot)
             return;
 
-        camShake.InduceStress(0.05f); //pas sur de garder le shake !
+        //camShake.InduceStress(0.05f); //pas sur de garder le shake !
+        //camRecoil.RecoilFire();
+
         currentWeapon.MunitionChargeur--;
         for (int i = 0; i < currentWeapon.BulletsPerShoot; i++)
         {
@@ -127,7 +159,7 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Reload()
     {
-        if (currentWeapon.MunitionsStock > 0 && !currentWeapon.isReloading)
+        if (currentWeapon.MunitionsStock > 0 && !currentWeapon.IsReloading)
         {
             currentWeapon.Reload();
         }
@@ -135,13 +167,23 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Aim()
     {
+        if (playerCtrl.IsRunning || currentWeapon.IsReloading)
+        {
+            Debug.Log("NTM");
+            return;
+        }
         if (Input.GetKey(KeyCode.Mouse1))
         {
-            Vector3.Lerp(currentWeapon.transform.localPosition, aimPos.localPosition, 0.01f);
+            IsAiming = true;
+            Debug.Log(aimPos.position.y - currentWeapon.AimPos.position.y);
+            currentWeapon.transform.position = aimPos.position - difference;
+            //currentWeapon.transform.localPosition = Vector3.Slerp(currentWeapon.transform.localPosition, aimPos.localPosition - currentWeapon.AimPos.localPosition, initFov);
         }
         else
         {
-            Vector3.Lerp(currentWeapon.transform.localPosition, defaultPos.localPosition, 0.01f);
+            IsAiming = false;
+            currentWeapon.transform.position = defaultPos.position;
+            //currentWeapon.transform.localPosition = Vector3.Slerp(currentWeapon.transform.localPosition, defaultPos.localPosition, initFov);
         }
     }
 
