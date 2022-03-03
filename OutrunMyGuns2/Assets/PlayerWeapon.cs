@@ -79,7 +79,7 @@ public class PlayerWeapon : MonoBehaviour
         {
             Scroll();
         }
-        Aim();
+        //Aim();
         if (Input.GetKeyDown(KeyCode.F))
         {
             Cut();
@@ -136,6 +136,9 @@ public class PlayerWeapon : MonoBehaviour
         //camRecoil.RecoilFire();
 
         currentWeapon.MunitionChargeur--;
+        if (currentWeapon.SFX != null)
+            currentWeapon.SFX.Play();
+
         for (int i = 0; i < currentWeapon.BulletsPerShoot; i++)
         {
             float x = Random.Range(-currentWeapon.Precision, currentWeapon.Precision);
