@@ -9,6 +9,11 @@ public class PlayerLife : MonoBehaviour
     public float LifeMax = 150, Life = 150;
     [SerializeField] Image bloodScreen;
 
+    [Header("Regen")]
+    bool isHurt = false;
+    [SerializeField] float TimeMax = 4f;
+    float timeRegen;
+
     private void Start()
     {
         Life = LifeMax;
@@ -17,6 +22,7 @@ public class PlayerLife : MonoBehaviour
     private void Update()
     {
         UpdateUILife();
+        Regen();
     }
 
     void UpdateUILife()
@@ -29,9 +35,30 @@ public class PlayerLife : MonoBehaviour
         bloodScreen.color = new Color(1,1,1, _alpha);
     }
 
+    private void Regen()
+    {
+        if (isHurt)
+        {
+            timeRegen += Time.deltaTime;
+            if (timeRegen >= TimeMax)
+            {
+                Life+= 5;
+            }
+            if (Life >= LifeMax)
+            {
+                isHurt = false;
+                timeRegen = 0;
+                Life = LifeMax;
+            }
+        }
+    }
+
     public void TakeDamage(int _dmg)
     {
         Life -= _dmg;
+
+        isHurt = true;
+        timeRegen = 0;
 
         if (Life <= 0)
         {

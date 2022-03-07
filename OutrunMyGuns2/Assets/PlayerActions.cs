@@ -27,7 +27,7 @@ public class PlayerActions : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(pc.cameraTransform.position, pc.cameraTransform.forward, out hit, distanceMaxInteraction))
         {
-            if (hit.collider.TryGetComponent(out PerkBoitier _pkb))
+            if (hit.collider.TryGetComponent(out PerkBoitier _pkb) && !perksP.AlreadyHas(_pkb.MyPerk))
             {
                 interactText.text = "Press E to buy " + _pkb.MyPerk.ToString() + " for " + _pkb.Cost;
 

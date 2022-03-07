@@ -21,11 +21,11 @@ public class ZombieBehaviour : MonoBehaviour
 
     [Header("Attack")]
     [SerializeField] Vector3 sphereTrigger;
-    Vector3 spherePos
+    Vector3 directionAttack
     {
-        get { return transform.position + transform.forward + sphereTrigger; }
+        get { return transform.position + transform.TransformDirection(sphereTrigger); }
     }
-    [SerializeField] float radius = 0.2f;
+    [SerializeField] float distanceDetection = 1f;
 
     private void Awake()
     {
@@ -67,12 +67,15 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void Attack()
     {
+        Debug.Log("atack");
         RaycastHit hit;
         Vector3 pos = sphereTrigger + transform.position;
-        if (Physics.SphereCast(spherePos, radius, transform.forward, out hit, radius) && MyState != ZombieStates.Attack)
+        if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection) && MyState != ZombieStates.Attack)
         {
+            Debug.Log("Je collide tout");
             if (hit.collider.TryGetComponent(out PlayerLife _pLife))
             {
+                Debug.Log("Je collide player");
                 MyState = ZombieStates.Attack;
                 nav.isStopped = true;
                 anim.SetTrigger("Attack");
@@ -83,8 +86,7 @@ public class ZombieBehaviour : MonoBehaviour
     public void Scratch()
     {
         RaycastHit hit;
-        Vector3 pos = sphereTrigger + transform.position;
-        if (Physics.SphereCast(spherePos, radius, transform.forward, out hit, radius))
+        if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection))
         {
             if (hit.collider.TryGetComponent(out PlayerLife _pLife))
             {
@@ -119,6 +121,6 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(spherePos, radius);
+        Debug.DrawRay(directionAttack, transform.forward,Color.red);
     }
 }

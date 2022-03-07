@@ -7,8 +7,9 @@ public class PerkBoitier : MonoBehaviour
     public Perks MyPerk;
     public int Cost = 2500;
 
-    public void BuyPerk()
+    private void OnGUI()
     {
-
+        transform.name = MyPerk.ToString() + " Botier";
     }
+
 }

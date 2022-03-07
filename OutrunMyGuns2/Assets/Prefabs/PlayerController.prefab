@@ -255,7 +255,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2831362777760233918}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalPosition: {x: 0, y: 0.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7323167407337790979}
@@ -767,6 +767,7 @@ MonoBehaviour:
   LifeMax: 150
   Life: 150
   bloodScreen: {fileID: 0}
+  TimeMax: 4
 --- !u!114 &6698589468286110030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -809,6 +810,11 @@ MonoBehaviour:
   Points: 0
   pointsText: {fileID: 0}
   startingPoints: 2500
+  AnimPoint: {fileID: 0}
+  tCost: {fileID: 0}
+  prefabText: {fileID: 0}
+  parentPoints: {fileID: 0}
+  PointsT: []
 --- !u!114 &6698589468286110031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -878,7 +884,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6698589468018021145}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalPosition: {x: 0, y: 0.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6698589466953106499}

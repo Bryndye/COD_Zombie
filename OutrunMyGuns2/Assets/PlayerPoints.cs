@@ -30,6 +30,10 @@ public class PlayerPoints : MonoBehaviour
     private void Update()
     {
         pointsText.text = Points.ToString();
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            GetPoints(10);
+        }
     }
 
 
@@ -57,7 +61,15 @@ public class PlayerPoints : MonoBehaviour
     public void GetPoints(int _points)
     {
         Points += _points;
+
         PointsT[index].gameObject.SetActive(true);
+        PointsT[index].GetComponent<PointsDirection>().ResetState();
         PointsT[index].text = "+" + _points.ToString();
+
+        index++;
+        if (index >= PointsT.Count)
+        {
+            index = 0;
+        }
     }
 }

@@ -52,6 +52,7 @@ public class PerksPlayer : MonoBehaviour
     {
         HasMasto = true;
         playerLife.LifeMax = LifeMax;
+        playerLife.Life = playerLife.LifeMax;
         IconM.gameObject.SetActive(HasMasto);
     }
 
@@ -88,7 +89,7 @@ public class PerksPlayer : MonoBehaviour
     #region Check For perks
     public void WhichPerkToBoy(Perks _perk)
     {
-        Debug.Log("perk en cours");
+        //Debug.Log("perk en cours");
 
         switch (_perk)
         {
@@ -112,11 +113,30 @@ public class PerksPlayer : MonoBehaviour
         }
     }
 
-    public void CanPlayerBuyIt(Perks _perkToBuy)
+    public bool AlreadyHas(Perks _perk)
     {
-        //if player has enough points, can buy it
-        //if player has already it, dont boy it
+        switch (_perk)
+        {
+            case Perks.Mastodonte:
+                return HasMasto;
+                break;
+            case Perks.PassePass:
+                return HasPassPass;
+                break;
+            case Perks.DoubleTap:
+                return HasDoubleTap;
+                break;
+            case Perks.ThreeW:
+                return HasThreeW;
+                break;
+            case Perks.Revive:
+                return HasRevive;
+                break;
 
+            default:
+                return false;
+                break;
+        }
     }
 
     #endregion
