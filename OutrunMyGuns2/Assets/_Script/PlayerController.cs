@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 Rotation;
     [HideInInspector] public float rotY;
 
-    [SerializeField] private Transform cameraTransform, weaponTransform;
+    public Transform cameraTransform, weaponTransform;
     [Range(1, 20)]
     [SerializeField] private float cameraSensibility;
     [SerializeField] private Vector2 minMaxVerticalValues;

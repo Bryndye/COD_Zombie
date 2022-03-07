@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -13,14 +11,14 @@ public class Weapon : MonoBehaviour
     public int MunitionsMaxChargeur = 8;
     public int MunitionsStock = 36, MunitionChargeur = 8;
     [HideInInspector] public bool IsReloading = false;
-    
+
     [Header("Fire")]
     public int Damage = 10;
     public int BulletsPerShoot = 1;
     public float FireRate = 0.4f, TimeToShoot = 0;
     [HideInInspector] public bool CanShoot = false;
     public bool canHold = true;
-    [Tooltip("Plus proche de 1 plus precis, plus proche de 0 moins precis")] 
+    [Tooltip("Plus proche de 1 plus precis, plus proche de 0 moins precis")]
     public float Precision = 0.8f;
     [HideInInspector] public AudioSource SFX;
 
@@ -57,11 +55,12 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void Reload()
+    public void Reload(float _mutli = 1)
     {
         if (Anim != null)
         {
             IsReloading = true;
+            Anim.SetFloat("Multi", _mutli);
             Anim.SetTrigger("Reload");
         }
         else

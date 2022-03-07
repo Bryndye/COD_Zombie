@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -39,7 +37,7 @@ public class ZombieBehaviour : MonoBehaviour
     private void Start()
     {
         bool _isWalk = Random.Range(0, 2) == 1 ? true : false;
-        anim.SetBool("WalkWay1",_isWalk);
+        anim.SetBool("WalkWay1", _isWalk);
     }
 
     void Update()

@@ -20,6 +20,7 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] Animator animHands;
     public List<Weapon> MyWeapons;
     public Weapon currentWeapon;
+    public int CountMaxWeapons;
 
     [Header("Scope")]
     public float initFov;
@@ -30,6 +31,10 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] TextMeshProUGUI WeaponNameT;
     [SerializeField] TextMeshProUGUI MunChargT;
     [SerializeField] TextMeshProUGUI MunStockT;
+
+    [Header("Perks Effets")]
+    public float MultiplicateurBullets = 1;
+    public float MultiplicateurSpeedReload = 1;
 
     private void Awake()
     {
@@ -133,13 +138,13 @@ public class PlayerWeapon : MonoBehaviour
             return;
 
         //camShake.InduceStress(0.05f); //pas sur de garder le shake !
-        //camRecoil.RecoilFire();
+        camRecoil.RecoilFire();
 
         currentWeapon.MunitionChargeur--;
         if (currentWeapon.SFX != null)
             currentWeapon.SFX.Play();
 
-        for (int i = 0; i < currentWeapon.BulletsPerShoot; i++)
+        for (int i = 0; i < currentWeapon.BulletsPerShoot * MultiplicateurBullets; i++)
         {
             float x = Random.Range(-currentWeapon.Precision, currentWeapon.Precision);
             float y = Random.Range(-currentWeapon.Precision, currentWeapon.Precision);
@@ -164,7 +169,7 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (currentWeapon.MunitionsStock > 0 && !currentWeapon.IsReloading)
         {
-            currentWeapon.Reload();
+            currentWeapon.Reload(MultiplicateurSpeedReload);
         }
     }
 

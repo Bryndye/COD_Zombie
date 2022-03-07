@@ -402,7 +402,6 @@ GameObject:
   - component: {fileID: 6698589466633115449}
   - component: {fileID: 6698589466633115448}
   - component: {fileID: 6698589466633115455}
-  - component: {fileID: 626748383}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -447,7 +446,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.01
   far clip plane: 500
   field of view: 70
   orthographic: 0
@@ -589,19 +588,6 @@ MonoBehaviour:
       data1: 0
       data2: 0
   defaultFrameSettings: 0
---- !u!114 &626748383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6698589466633115453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 100485a5c2420ee4e9a590ad2772bbdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pw: {fileID: 458931}
 --- !u!1 &6698589466953106498
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,6 +597,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6698589466953106499}
+  - component: {fileID: 2046486573}
   m_Layer: 0
   m_Name: HolderCamera
   m_TagString: Untagged
@@ -634,6 +621,19 @@ Transform:
   m_Father: {fileID: 6698589468018021146}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2046486573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6698589466953106498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100485a5c2420ee4e9a590ad2772bbdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pw: {fileID: 458931}
 --- !u!1 &6698589467052365940
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,6 +647,9 @@ GameObject:
   - component: {fileID: 6698589467052365943}
   - component: {fileID: 458931}
   - component: {fileID: 1773710211}
+  - component: {fileID: 6698589468286110030}
+  - component: {fileID: 7381150959626264638}
+  - component: {fileID: 6698589468286110031}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -732,16 +735,19 @@ MonoBehaviour:
   defaultPos: {fileID: 7323167407337790979}
   aimPos: {fileID: 5513973965524589931}
   weaponListT: {fileID: 4233468092050904095}
-  camRecoil: {fileID: 626748383}
+  camRecoil: {fileID: 2046486573}
   camTransform: {fileID: 6698589466633115454}
   animHands: {fileID: 0}
   MyWeapons: []
   currentWeapon: {fileID: 0}
+  CountMaxWeapons: 0
   initFov: 1
   camWeapon: {fileID: 6698589466633115449}
   WeaponNameT: {fileID: 0}
   MunChargT: {fileID: 0}
   MunStockT: {fileID: 0}
+  MultiplicateurBullets: 1
+  MultiplicateurSpeedReload: 1
   RecoilHolder: {fileID: 0}
   RecoilHolderCam: {fileID: 0}
   upRecoil: 0
@@ -761,6 +767,62 @@ MonoBehaviour:
   LifeMax: 150
   Life: 150
   bloodScreen: {fileID: 0}
+--- !u!114 &6698589468286110030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6698589467052365940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f6ec61e62c6ca1458be359046d341d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HasMasto: 0
+  LifeMax: 250
+  IconM: {fileID: 0}
+  HasPassPass: 0
+  SpeedMultiReload: 2
+  IconPP: {fileID: 0}
+  HasDoubleTap: 0
+  MuliplicateurBullets: 2
+  IconDP: {fileID: 0}
+  HasRevive: 0
+  CountOfAutoReive: 3
+  IconRev: {fileID: 0}
+  HasThreeW: 0
+  CountWeapons: 3
+  IconThreeW: {fileID: 0}
+--- !u!114 &7381150959626264638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6698589467052365940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 229aa33bd6a7feb4b9b9a022497a17bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Points: 0
+  pointsText: {fileID: 0}
+  startingPoints: 2500
+--- !u!114 &6698589468286110031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6698589467052365940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2b3c8cb849def74ca8d3b7cb3ff4e62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceMaxInteraction: 1.5
+  interactText: {fileID: 0}
 --- !u!1 &6698589467223091053
 GameObject:
   m_ObjectHideFlags: 0
@@ -1095,13 +1157,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7701452471600190433, guid: c592f34f74b9b224e95973645646a6d3, type: 3}
+      propertyPath: recoil.x
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7701452471600190433, guid: c592f34f74b9b224e95973645646a6d3, type: 3}
+      propertyPath: returnSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 9187757261289858825, guid: c592f34f74b9b224e95973645646a6d3, type: 3}
       propertyPath: m_Name
       value: WeaponTest
       objectReference: {fileID: 0}
     - target: {fileID: 9187757261289858825, guid: c592f34f74b9b224e95973645646a6d3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c592f34f74b9b224e95973645646a6d3, type: 3}
@@ -1117,6 +1187,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4233468092050904095}
     m_Modifications:
+    - target: {fileID: 5056973736451436260, guid: 598843db457c061459fc95b2a7081e36, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6209455652674943347, guid: 598843db457c061459fc95b2a7081e36, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1169,9 +1243,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8691167921862863183, guid: 598843db457c061459fc95b2a7081e36, type: 3}
+      propertyPath: recoil.x
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 8691167921862863216, guid: 598843db457c061459fc95b2a7081e36, type: 3}
       propertyPath: m_Name
       value: WeaponTest 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8691167921862863216, guid: 598843db457c061459fc95b2a7081e36, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 598843db457c061459fc95b2a7081e36, type: 3}
