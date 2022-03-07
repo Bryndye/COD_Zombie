@@ -26,7 +26,10 @@ public class Weapon : MonoBehaviour
     public Vector3 recoil;
     public float snapiness, returnSpeed;
 
+    [Header("Aim")]
     public Transform AimPos;
+    public int AimFov;
+    public float SpeedToScoop;
 
     private void Awake()
     {

@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+public enum MovementState { Walk, Run, Crouch}
 public class PlayerController : MonoBehaviour
 {
     CharacterController controller;
@@ -23,9 +22,9 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Movement")]
+    public MovementState MovementState;
     public bool IsRunning = false;
     Vector3 velocity;
-    private Vector2 movementInput;
     public float Speed = 5f;
 
     [Header("Jump")]
@@ -56,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
         rotY = Mathf.Clamp(rotY, minMaxVerticalValues.x, minMaxVerticalValues.y);
         cameraTransform.transform.localRotation = Quaternion.Euler(rotY, 0, 0);
-        weaponTransform.transform.localRotation = Quaternion.Euler(rotY, 0, 0);
+        //weaponTransform.transform.localRotation = Quaternion.Euler(rotY, 0, 0);
     }
 
 
@@ -84,6 +83,12 @@ public class PlayerController : MonoBehaviour
     private void Movement()
     {
         Vector3 _moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        float _facteurStateMovement = 1f;
+        if (Input.GetKey(KeyCode.LeftShift) ) //add bool if can run !
+        {
+            _facteurStateMovement = 1.5f;
+            MovementState = MovementState.Run;
+        }
         _moveDirection = transform.TransformDirection(_moveDirection);
         controller.Move(_moveDirection * Speed * Time.deltaTime);
     }

@@ -23,9 +23,9 @@ public class PlayerWeapon : MonoBehaviour
     public int CountMaxWeapons;
 
     [Header("Scope")]
-    public float initFov;
+    public float FovDefault;
     [SerializeField] Camera camWeapon;
-    Vector3 difference;
+    Vector3 difference { get { return new Vector3(0, currentWeapon.AimPos.localPosition.y, 0); } }
 
     [Header("UI")]
     [SerializeField] TextMeshProUGUI WeaponNameT;
@@ -49,8 +49,6 @@ public class PlayerWeapon : MonoBehaviour
             MyWeapons.Add(weaponListT.GetChild(i).GetComponent<Weapon>());
         }
         currentWeapon = MyWeapons.FirstOrDefault();
-
-        //initFov = camWeapon.fieldOfView;
     }
 
     void Update()
@@ -84,7 +82,7 @@ public class PlayerWeapon : MonoBehaviour
         {
             Scroll();
         }
-        //Aim();
+        Aim();
         if (Input.GetKeyDown(KeyCode.F))
         {
             Cut();
@@ -127,9 +125,6 @@ public class PlayerWeapon : MonoBehaviour
         }
         currentWeapon = MyWeapons[_index];
         currentWeapon.gameObject.SetActive(true);
-
-        difference = new Vector3(0, aimPos.position.y - currentWeapon.AimPos.position.y, 0);
-
     }
 
     public void Fire()
@@ -175,23 +170,22 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Aim()
     {
-        if (playerCtrl.IsRunning || currentWeapon.IsReloading)
-        {
-            Debug.Log("NTM");
-            return;
-        }
-        if (Input.GetKey(KeyCode.Mouse1))
+        //if ()
+        //{
+        //    Debug.Log("ne peut pas viser");
+        //    return;
+        //}
+        if (Input.GetKey(KeyCode.Mouse1) && (!playerCtrl.IsRunning && !currentWeapon.IsReloading))
         {
             IsAiming = true;
-            Debug.Log(aimPos.position.y - currentWeapon.AimPos.position.y);
-            currentWeapon.transform.position = aimPos.position - difference;
-            //currentWeapon.transform.localPosition = Vector3.Slerp(currentWeapon.transform.localPosition, aimPos.localPosition - currentWeapon.AimPos.localPosition, initFov);
+            camWeapon.fieldOfView = Mathf.Lerp(camWeapon.fieldOfView, currentWeapon.AimFov, currentWeapon.TimeToShoot);
+            weaponListT.transform.localPosition = Vector3.Lerp(weaponListT.transform.localPosition, aimPos.localPosition - difference, currentWeapon.SpeedToScoop);
         }
         else
         {
             IsAiming = false;
-            currentWeapon.transform.position = defaultPos.position;
-            //currentWeapon.transform.localPosition = Vector3.Slerp(currentWeapon.transform.localPosition, defaultPos.localPosition, initFov);
+            camWeapon.fieldOfView = Mathf.Lerp(camWeapon.fieldOfView, FovDefault, currentWeapon.TimeToShoot);
+            weaponListT.transform.localPosition = Vector3.Lerp(weaponListT.transform.localPosition, defaultPos.localPosition, currentWeapon.SpeedToScoop);
         }
     }
 
