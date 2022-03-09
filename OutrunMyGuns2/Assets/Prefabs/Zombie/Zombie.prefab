@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 6222715270801916477}
   - component: {fileID: 7918367843681421015}
   - component: {fileID: 2705523378537214118}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1181,7 +1181,7 @@ GameObject:
   - component: {fileID: 4953589076927999918}
   - component: {fileID: 4953589076927999914}
   - component: {fileID: 4953589076927999912}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Zombie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1270,7 +1270,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25fe0b37215fc3c408aaffd8ded1fe22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myColliders:
+  - {fileID: 1430927910217273420}
+  - {fileID: 7918367843681421015}
   MyState: 0
+  myNormalStates: 0
   Target: {fileID: 0}
   Life: 150
   sphereTrigger: {x: 0, y: 1, z: 0}
