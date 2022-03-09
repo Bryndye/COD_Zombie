@@ -385,7 +385,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3680627231148543237}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.25, y: -0.25, z: 0.5}
+  m_LocalPosition: {x: 0.25, y: -0.25, z: 0.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 750841330023436245}
@@ -733,7 +733,7 @@ GameObject:
   - component: {fileID: 6698589468286110030}
   - component: {fileID: 7381150959626264638}
   - component: {fileID: 6698589468286110031}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlayerController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -788,14 +788,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotY: 0
   cameraTransform: {fileID: 6698589468018021146}
-  weaponTransform: {fileID: 750841330023436245}
   cameraSensibility: 3
   minMaxVerticalValues: {x: -80, y: 80}
-  defaultCameraFov: 60
-  fovChangeSpeed: 70
-  fovChangeMarge: 10
+  MovementState: 0
   IsRunning: 0
-  Speed: 5
+  SpeedWalk: 5
+  SpeedRunFactor: 1.5
+  SpeedCrounchFactor: 0.5
+  isGrounded: 0
   LayerGround:
     serializedVersion: 2
     m_Bits: 64
@@ -819,21 +819,29 @@ MonoBehaviour:
   weaponListT: {fileID: 4233468092050904095}
   camRecoil: {fileID: 2046486573}
   camTransform: {fileID: 6698589466633115454}
+  ignoreLayerShoot:
+    serializedVersion: 2
+    m_Bits: 128
   animHands: {fileID: 0}
   MyWeapons: []
   currentWeapon: {fileID: 0}
   CountMaxWeapons: 0
-  initFov: 1
+  PREFAB_TEST_SHOOT: {fileID: 0}
+  FovDefault: 60
   camWeapon: {fileID: 6698589466633115449}
+  MultiplicateurBullets: 1
+  MultiplicateurSpeedReload: 1
   WeaponNameT: {fileID: 0}
   MunChargT: {fileID: 0}
   MunStockT: {fileID: 0}
-  MultiplicateurBullets: 1
-  MultiplicateurSpeedReload: 1
-  RecoilHolder: {fileID: 0}
-  RecoilHolderCam: {fileID: 0}
-  upRecoil: 0
-  sideRocoil: 0
+  Hitmarker: {fileID: 0}
+  Reticules: {fileID: 0}
+  X: []
+  Y: []
+  MoyX: 0
+  MoyY: 0
+  SommeX: 0
+  SommeY: 0
 --- !u!114 &1773710211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,12 +898,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Points: 0
-  pointsText: {fileID: 0}
   startingPoints: 30000
   AnimPoint: {fileID: 0}
-  tCost: {fileID: 0}
-  prefabText: {fileID: 0}
+  prefabPointText: {fileID: 5901885024203600969, guid: eaf40f244c9c193429fbdf51659c5f99, type: 3}
   parentPoints: {fileID: 0}
+  numberOfPointText: 100
+  pointsText: {fileID: 0}
+  tCost: {fileID: 0}
   PointsT: []
 --- !u!114 &6698589468286110031
 MonoBehaviour:
@@ -909,7 +918,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b3c8cb849def74ca8d3b7cb3ff4e62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceMaxInteraction: 1.5
+  distanceMaxInteraction: 2
   interactText: {fileID: 0}
 --- !u!1 &6698589467223091053
 GameObject:
@@ -1016,7 +1025,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 22f4d9cb4c2b73f4c9fda53fac8e160b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.000000059604645
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 22f4d9cb4c2b73f4c9fda53fac8e160b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1024,7 +1033,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 22f4d9cb4c2b73f4c9fda53fac8e160b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.0000007003546
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 22f4d9cb4c2b73f4c9fda53fac8e160b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1253,6 +1262,25 @@ PositionConstraint:
   m_Sources:
   - sourceTransform: {fileID: 4233468092050904095}
     weight: 1
+--- !u!95 &1542555272722258967
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386689548962337714}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &8023627756452550830
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1334,7 +1362,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7701452471600190433, guid: c592f34f74b9b224e95973645646a6d3, type: 3}
       propertyPath: recoil.x
-      value: -10
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7701452471600190433, guid: c592f34f74b9b224e95973645646a6d3, type: 3}
+      propertyPath: Precision
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7701452471600190433, guid: c592f34f74b9b224e95973645646a6d3, type: 3}
       propertyPath: AimOffset.y
@@ -1430,11 +1462,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8691167921862863183, guid: 598843db457c061459fc95b2a7081e36, type: 3}
       propertyPath: recoil.x
-      value: -1
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 8691167921862863183, guid: 598843db457c061459fc95b2a7081e36, type: 3}
       propertyPath: AimOffset.y
       value: -0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 8691167921862863183, guid: 598843db457c061459fc95b2a7081e36, type: 3}
+      propertyPath: MunitionsStock
+      value: 500000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8691167921862863183, guid: 598843db457c061459fc95b2a7081e36, type: 3}
+      propertyPath: MunitionChargeur
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 8691167921862863183, guid: 598843db457c061459fc95b2a7081e36, type: 3}
+      propertyPath: MunitionsMaxChargeur
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8691167921862863216, guid: 598843db457c061459fc95b2a7081e36, type: 3}
       propertyPath: m_Name

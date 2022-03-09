@@ -165,15 +165,15 @@ MonoBehaviour:
   MunitionsStock: 100
   MunitionChargeur: 20
   IsReloading: 0
+  CanShoot: 0
   Damage: 50
   BulletsPerShoot: 1
   FireRate: 0.1
   TimeToShoot: 0
-  CanShoot: 0
+  Precision: 5
   canHold: 1
-  Precision: 0.8
   SFX: {fileID: 0}
-  recoil: {x: 0, y: 2, z: 0}
+  recoil: {x: -3, y: 1, z: 0}
   snapiness: 10
   returnSpeed: 10
   AimPos: {fileID: 7409569260061937152}

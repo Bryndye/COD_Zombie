@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum MovementState { Walk, Run, Crouch}
+public enum MovementState { Idle, Walk, Run, Crouch}
 public class PlayerController : MonoBehaviour
 {
     CharacterController controller;
@@ -9,27 +9,20 @@ public class PlayerController : MonoBehaviour
     private Vector2 Rotation;
     [HideInInspector] public float rotY;
 
-    public Transform cameraTransform, weaponTransform;
+    public Transform cameraTransform;
     [Range(1, 20)]
     [SerializeField] private float cameraSensibility;
     [SerializeField] private Vector2 minMaxVerticalValues;
-    [Range(1, 140)]
-    [SerializeField] private float defaultCameraFov;
-    [Range(1, 100)]
-    [SerializeField] private float fovChangeSpeed;
-    [Range(0, 10)]
-    [SerializeField] private float fovChangeMarge;
-
 
     [Header("Movement")]
     public MovementState MovementState;
     public bool IsRunning = false;
     Vector3 velocity;
-    public float Speed = 5f;
+    public float SpeedWalk = 5f, SpeedRunFactor = 1.5f, SpeedCrounchFactor = 0.5f;
 
     [Header("Jump")]
+    public bool isGrounded;
     public LayerMask LayerGround;
-    bool isGrounded;
     [SerializeField] float gravity;
     public float JumpHeight = 2f;
 
@@ -55,7 +48,6 @@ public class PlayerController : MonoBehaviour
 
         rotY = Mathf.Clamp(rotY, minMaxVerticalValues.x, minMaxVerticalValues.y);
         cameraTransform.transform.localRotation = Quaternion.Euler(rotY, 0, 0);
-        //weaponTransform.transform.localRotation = Quaternion.Euler(rotY, 0, 0);
     }
 
 
@@ -82,15 +74,25 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
+        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+        {
+            MovementState = MovementState.Idle;
+            return;
+        }
         Vector3 _moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        
         float _facteurStateMovement = 1f;
         if (Input.GetKey(KeyCode.LeftShift) ) //add bool if can run !
         {
             _facteurStateMovement = 1.5f;
             MovementState = MovementState.Run;
         }
+        else
+        {
+            MovementState = MovementState.Walk;
+        }
         _moveDirection = transform.TransformDirection(_moveDirection);
-        controller.Move(_moveDirection * Speed * Time.deltaTime);
+        controller.Move(_moveDirection * SpeedWalk * _facteurStateMovement * Time.deltaTime);
     }
 
     private void Jump()

@@ -13,13 +13,14 @@ public class Weapon : MonoBehaviour
     [HideInInspector] public bool IsReloading = false;
 
     [Header("Fire")]
+    [HideInInspector] public bool CanShoot = false;
     public int Damage = 10;
     public int BulletsPerShoot = 1;
-    public float FireRate = 0.4f, TimeToShoot = 0;
-    [HideInInspector] public bool CanShoot = false;
-    public bool canHold = true;
+    public float FireRate = 0.4f;
+    [HideInInspector] public float TimeToShoot = 0;
     [Tooltip("Plus proche de 1 plus precis, plus proche de 0 moins precis")]
-    public float Precision = 0.8f;
+    public float Precision = 0.1f;
+    public bool canHold = true;
     [HideInInspector] public AudioSource SFX;
 
     [Header("Recoil")]

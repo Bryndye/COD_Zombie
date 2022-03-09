@@ -5,25 +5,29 @@ using UnityEngine;
 
 public class PlayerPoints : MonoBehaviour
 {
+    [Header("Litteraly points")]
     public int Points;
-    [SerializeField] TextMeshProUGUI pointsText;
     [SerializeField] int startingPoints = 500;
 
-    [Header("Anim Points")]
+    [Header("Param")]
     public Animator AnimPoint;
-    [SerializeField] TextMeshProUGUI tCost;
-    [SerializeField] GameObject prefabText;
+    [SerializeField] GameObject prefabPointText;
     [SerializeField] Transform parentPoints;
-    public List<TextMeshProUGUI> PointsT;
     int index = 0;
+
+    [Header("UI")]
+    [SerializeField] int numberOfPointText = 30;
+    [SerializeField] TextMeshProUGUI pointsText;
+    [SerializeField] TextMeshProUGUI tCost;
+    public List<TextMeshProUGUI> PointsT;
 
 
     private void Start()
     {
         Points = startingPoints;
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < numberOfPointText; i++)
         {
-            PointsT.Add(Instantiate(prefabText, parentPoints).GetComponent<TextMeshProUGUI>());
+            PointsT.Add(Instantiate(prefabPointText, parentPoints).GetComponent<TextMeshProUGUI>());
         }
     }
 

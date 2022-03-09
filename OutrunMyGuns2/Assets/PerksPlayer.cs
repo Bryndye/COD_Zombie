@@ -54,6 +54,7 @@ public class PerksPlayer : MonoBehaviour
         playerLife.LifeMax = LifeMax;
         playerLife.Life = playerLife.LifeMax;
         IconM.gameObject.SetActive(HasMasto);
+        IconM.transform.SetSiblingIndex(0);
     }
 
     public void GetPassPass()
@@ -61,6 +62,7 @@ public class PerksPlayer : MonoBehaviour
         HasPassPass = true;
         playerWeapon.MultiplicateurSpeedReload = SpeedMultiReload;
         IconPP.gameObject.SetActive(HasPassPass);
+        IconPP.transform.SetSiblingIndex(0);
     }
 
     public void GetDoubleTap()
@@ -68,6 +70,7 @@ public class PerksPlayer : MonoBehaviour
         HasDoubleTap = true;
         playerWeapon.MultiplicateurBullets = MuliplicateurBullets;
         IconDP.gameObject.SetActive(HasDoubleTap);
+        IconDP.transform.SetSiblingIndex(0);
     }
 
     public void GetRevive()
@@ -75,6 +78,7 @@ public class PerksPlayer : MonoBehaviour
         HasRevive = true;
         //Do something
         IconRev.gameObject.SetActive(HasRevive);
+        IconRev.transform.SetSiblingIndex(0);
     }
 
     public void GetThreeW()
@@ -82,6 +86,7 @@ public class PerksPlayer : MonoBehaviour
         HasThreeW = true;
         playerWeapon.CountMaxWeapons = CountWeapons;
         IconThreeW.gameObject.SetActive(HasThreeW);
+        IconThreeW.transform.SetSiblingIndex(0);
     }
     #endregion
 

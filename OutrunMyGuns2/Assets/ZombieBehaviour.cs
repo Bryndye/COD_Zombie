@@ -12,7 +12,7 @@ public class ZombieBehaviour : MonoBehaviour
 {
     NavMeshAgent nav;
     Animator anim;
-    CapsuleCollider cc;
+    Collider myCollider;
     public ZombieStates MyState;
     public Transform Target;
 
@@ -31,7 +31,7 @@ public class ZombieBehaviour : MonoBehaviour
     {
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
-        cc = GetComponent<CapsuleCollider>();
+        myCollider = GetComponent<Collider>();
     }
 
     private void Start()
@@ -72,7 +72,7 @@ public class ZombieBehaviour : MonoBehaviour
         Vector3 pos = sphereTrigger + transform.position;
         if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection) && MyState != ZombieStates.Attack)
         {
-            Debug.Log("Je collide tout");
+            //Debug.Log("Je collide tout");
             if (hit.collider.TryGetComponent(out PlayerLife _pLife))
             {
                 Debug.Log("Je collide player");
@@ -100,23 +100,36 @@ public class ZombieBehaviour : MonoBehaviour
         nav.isStopped = false;
         MyState = ZombieStates.Walk;
     }
-    public void TakeDamage(int _dmg)
+    public void TakeDamage(int _dmg, PlayerWeapon _player, bool _isHead = false)
     {
+        if (MyState == ZombieStates.Dead)
+        {
+            return;
+        }
         Life -= _dmg;
 
         if (Life <= 0)
         {
             DyingReviving(true);
+            if (_isHead)
+                _player.FeedbackHitZombie(100);
+            else
+                _player.FeedbackHitZombie(50);
+        }
+        else
+        {
+            _player.FeedbackHitZombie(10);
         }
     }
 
     public void DyingReviving(bool _active)
     {
-        Debug.Log("MORT ");
+        //Debug.Log("MORT ");
         MyState = ZombieStates.Dead;
         anim.SetTrigger("Dying");
         nav.isStopped = _active;
-        cc.enabled = !_active;
+        myCollider.enabled = !_active;
+        transform.GetComponentInChildren<Collider>().enabled = false;
     }
 
     private void OnDrawGizmos()

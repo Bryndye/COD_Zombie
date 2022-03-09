@@ -222,7 +222,7 @@ MonoBehaviour:
   canHold: 0
   Precision: 0.1
   SFX: {fileID: 0}
-  recoil: {x: -15, y: 0, z: 0}
+  recoil: {x: -5, y: 1, z: 0}
   snapiness: 10
   returnSpeed: 1
   AimPos: {fileID: 3635321459425122160}
