@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -71,7 +70,7 @@ public class WaveManager : MonoBehaviour
         _zb.Target = Players[0].transform;
 
         _zb.Reviving();
-        
+
         ZombiesPerRound--;
     }
 
@@ -108,7 +107,7 @@ public class WaveManager : MonoBehaviour
 
     public int GetHealthZombieRound()
     {
-        if (Round < 10 )
+        if (Round < 10)
         {
             return 100 * Round + 50;
         }

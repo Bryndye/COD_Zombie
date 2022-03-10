@@ -163,7 +163,6 @@ public class ZombieBehaviour : MonoBehaviour
 
     public void Reviving()
     {
-        Debug.Log("CA REVIVE");
         anim.SetTrigger("Revive");
         anim.ResetTrigger("Revive");
 

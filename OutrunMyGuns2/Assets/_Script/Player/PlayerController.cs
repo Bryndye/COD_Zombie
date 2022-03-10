@@ -1,9 +1,11 @@
 using UnityEngine;
+using TMPro;
 
-public enum MovementState { Idle, Walk, Run, Crouch}
+public enum MovementState { Idle, Walk, Run}
 public class PlayerController : MonoBehaviour
 {
     CharacterController controller;
+    [SerializeField] TextMeshProUGUI textVelocity;
 
     [Header("Camera")]
     private Vector2 Rotation;
@@ -18,13 +20,19 @@ public class PlayerController : MonoBehaviour
     public MovementState MovementState;
     public bool IsRunning = false;
     Vector3 velocity;
-    public float SpeedWalk = 5f, SpeedRunFactor = 1.5f, SpeedCrounchFactor = 0.5f;
+    public float SpeedWalk = 5f, SpeedRunFactor = 1.5f;
+    float facteurStateMovement = 1;
 
     [Header("Jump")]
     public bool isGrounded;
     public LayerMask LayerGround;
     [SerializeField] float gravity;
     public float JumpHeight = 2f;
+
+    [Header("Crouch")]
+    public bool IsCrouching = false;
+    [SerializeField] Vector3 posCamCrouch;
+    [SerializeField] float scaleCollider = 1, SpeedCrounchFactor = 0.5f;
 
     private void Awake()
     {
@@ -36,8 +44,11 @@ public class PlayerController : MonoBehaviour
     {
         CameraLook();
         OnTheGround();
+        Crouch();
         Movement();
         Jump();
+
+        textVelocity.text = controller.velocity.ToString();
     }
 
     private void CameraLook()
@@ -55,6 +66,23 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.Log(InputSystem.onDeviceChange);
         Gravity();
+    }
+
+    private float FacteurMovementManager()
+    {
+        switch (MovementState)
+        {
+            case MovementState.Idle:
+                return facteurStateMovement = 1;
+
+            case MovementState.Walk:
+                return facteurStateMovement = 1;
+
+            case MovementState.Run:
+                return facteurStateMovement = 1.5f;
+            default:
+                return facteurStateMovement = 1;
+        }
     }
 
     private void OnTheGround()
@@ -81,10 +109,8 @@ public class PlayerController : MonoBehaviour
         }
         Vector3 _moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         
-        float _facteurStateMovement = 1f;
-        if (Input.GetKey(KeyCode.LeftShift) ) //add bool if can run !
+        if (Input.GetKey(KeyCode.LeftShift) && !IsCrouching) //add bool if can run !
         {
-            _facteurStateMovement = 1.5f;
             MovementState = MovementState.Run;
         }
         else
@@ -92,7 +118,7 @@ public class PlayerController : MonoBehaviour
             MovementState = MovementState.Walk;
         }
         _moveDirection = transform.TransformDirection(_moveDirection);
-        controller.Move(_moveDirection * SpeedWalk * _facteurStateMovement * Time.deltaTime);
+        controller.Move(_moveDirection * SpeedWalk * FacteurMovementManager() * (IsCrouching ? 0.5f : 1) * Time.deltaTime);
     }
 
     private void Jump()
@@ -103,11 +129,27 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetAxisRaw("Jump") > 0)
         {
-            //velocity = new Vector3(controller.velocity.x, Mathf.Sqrt(JumpHeight * -2f * gravity), controller.velocity.z);
             velocity.y = Mathf.Sqrt(JumpHeight * -2f * gravity);
             //Debug.Log(velocity);
             controller.Move(velocity * Time.deltaTime);
         }
     }
 
+    private void Crouch()
+    {
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            IsCrouching = true;
+            controller.height = scaleCollider;
+            cameraTransform.localPosition = posCamCrouch;
+
+        }
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            IsCrouching = false;
+            MovementState = MovementState.Idle;
+            controller.height = 2;
+            cameraTransform.localPosition = new Vector3(0, 0.85f, 0);
+        }
+    }
 }

@@ -29,7 +29,7 @@ public class PlayerWeapon : MonoBehaviour
     public float FovDefault;
     [SerializeField] Camera camWeapon;
     Vector3 difference { get { return new Vector3(0, currentWeapon.AimPos.localPosition.y, 0); } }
-    float coefAim = 1, coefMovement = 1;
+    float coefTotal = 1, coefAim = 1, coefMovement = 1, coefShooting = 1, coefCrouch = 1;
 
     [Header("Perks Effets")]
     public float MultiplicateurBullets = 1;
@@ -39,14 +39,9 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] TextMeshProUGUI WeaponNameT;
     [SerializeField] TextMeshProUGUI MunChargT;
     [SerializeField] TextMeshProUGUI MunStockT;
+    [SerializeField] TextMeshProUGUI COEFPRECISION;
     [SerializeField] GameObject Hitmarker, Reticules;
-
-
-    public List<float> X, Y;
-    public float MoyX, MoyY, SommeX, SommeY;
-
-    int indexLOCAL = 0;
-
+    [SerializeField] RectTransform[] ReticulesT;
 
     private void Awake()
     {
@@ -65,27 +60,27 @@ public class PlayerWeapon : MonoBehaviour
 
     void Update()
     {
+        ModificateurAim();
+        GetPrecision();
         InputManager();
         UI();
     }
 
     void InputManager()
     {
-        ModificateurAim();
-        if (currentWeapon.canHold)
+        if (currentWeapon.canHold && Input.GetAxisRaw("Fire1") != 0)
         {
-            if (Input.GetAxisRaw("Fire1") != 0)
-            {
-                Fire();
-            }
+            Fire();
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Fire();
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                Fire();
-            }
+            coefShooting = 1;
         }
+
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -104,21 +99,24 @@ public class PlayerWeapon : MonoBehaviour
 
     private void ModificateurAim()
     {
-        coefAim = IsAiming ? 2 : 1;
+        coefAim = IsAiming ? 0.1f : 1;
+        coefCrouch = playerCtrl.IsCrouching ? 0.5f : 1;
         switch (playerCtrl.MovementState)
         {
             case MovementState.Idle:
                 coefMovement = 1;
                 break;
             case MovementState.Walk:
-                coefMovement = 0.5f;
+                coefMovement = 2f;
                 break;
-            case MovementState.Crouch:
-                coefMovement = 1.5f;
+            case MovementState.Run:
+                coefMovement = 3f;
                 break;
             default:
                 break;
         }
+        coefTotal = coefAim * coefMovement * coefShooting * coefCrouch;
+        COEFPRECISION.text = coefTotal.ToString();
     }
 
     #region UI - feedback
@@ -128,7 +126,7 @@ public class PlayerWeapon : MonoBehaviour
         MunChargT.text = currentWeapon.MunitionChargeur.ToString();
         MunStockT.text = currentWeapon.MunitionsStock.ToString();
 
-        Reticules.SetActive(!IsAiming);
+        Reticules.SetActive(!IsAiming && !playerCtrl.IsRunning);
     }
 
 
@@ -142,6 +140,35 @@ public class PlayerWeapon : MonoBehaviour
     {
         HitmarkerActiveUI();
         playerPoints.GetPoints(_p);
+    }
+
+
+    #endregion
+
+    #region Precision + Reticules
+    float distance, ration;
+    private void GetPrecision()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(camTransform.position, camTransform.forward, out hit))
+        {
+            distance = Vector3.Distance(camTransform.position, hit.point);
+            //Debug.Log(distance);
+
+            ration = Mathf.Atan(currentWeapon.Precision / 5) * coefTotal;
+            UpdatePosReticules();
+            //Debug.Log(distance * Mathf.Tan(alpha));
+        }
+    }
+
+    private void UpdatePosReticules()
+    {
+        // x20 pour la position des reticules
+        float _prec = Mathf.Lerp(ReticulesT[0].localPosition.y, currentWeapon.Precision * 200 * coefTotal, 0.5f);
+        ReticulesT[0].localPosition = new Vector3(0, _prec, 0);
+        ReticulesT[1].localPosition = new Vector3(0, -_prec, 0);
+        ReticulesT[2].localPosition = new Vector3(_prec, 0, 0);
+        ReticulesT[3].localPosition = new Vector3(-_prec, 0, 0);
     }
     #endregion
 
@@ -166,7 +193,8 @@ public class PlayerWeapon : MonoBehaviour
         if (!currentWeapon.CanShoot || playerCtrl.MovementState == MovementState.Run)
             return;
 
-        //camRecoil.RecoilFire();
+        camRecoil.RecoilFire();
+        coefShooting = 2;
 
         currentWeapon.MunitionChargeur--;
         if (currentWeapon.SFX != null)
@@ -174,46 +202,14 @@ public class PlayerWeapon : MonoBehaviour
 
         for (int i = 0; i < currentWeapon.BulletsPerShoot * MultiplicateurBullets; i++)
         {
-            float _x = Random.Range(-currentWeapon.Precision, currentWeapon.Precision) / (coefAim + coefMovement);
-            float _y = Random.Range(-currentWeapon.Precision, currentWeapon.Precision) / (coefAim + coefMovement);
-
-            Vector3 _direction = camTransform.forward;
-            //_direction = Quaternion.Euler(0, camTransform.localRotation.y + _y, camTransform.localRotation.x + _x) * _direction;
-
-            //_direction += Quaternion.AngleAxis(Random.Range(-currentWeapon.Precision, currentWeapon.Precision), Vector3.forward) * _direction;
-            //_direction += Quaternion.AngleAxis(Random.Range(-currentWeapon.Precision, currentWeapon.Precision), Vector3.up) * _direction;
-
             Vector3 _posInit = Vector3.zero;
-            RaycastHit hit;
-            if (Physics.Raycast(camTransform.position, camTransform.forward, out hit))
-            {
-                //x = [atan(-precisionAngle); atan(precisionAngle)] varie entre ces 2 valeurs
-                //angle x = arctan(x/distance)
-                //angle y = arctan((x/distance) + tan(precisionAngle))
 
-                float _distance = Vector3.Distance(camTransform.position, hit.point);
-                Debug.Log(_distance);
-                float _alpha = Random.Range(Mathf.Atan(-currentWeapon.Precision / _distance), Mathf.Atan(currentWeapon.Precision / _distance));
-
-                _x = Mathf.Atan(_alpha);
-                _y = Mathf.Atan(_alpha + Mathf.Tan(currentWeapon.Precision));
-
-
-                // x20 pour la position des reticules
-                _alpha = Mathf.Atan(currentWeapon.Precision / 5);
-                _posInit = Random.insideUnitCircle * _distance * Mathf.Tan(_alpha);
-                Debug.Log(_distance * Mathf.Tan(0.1f));
-
-            }
+            
+            _posInit = Random.insideUnitSphere * distance * Mathf.Tan(ration);
 
             //_direction = Quaternion.Euler(0, indexLOCAL, 0) * _direction;
-            indexLOCAL++;
 
-
-
-            Moyenne(_x,_y);
-
-            RaycastHit[] hits = Physics.RaycastAll(camTransform.position + new Vector3(0, _posInit.y, _posInit.x), camTransform.forward, 100, ~ignoreLayerShoot);
+            RaycastHit[] hits = Physics.RaycastAll(camTransform.position + _posInit, camTransform.forward, 100, ~ignoreLayerShoot);
             for (int y = 0; y < hits.Length; y++)
             {
                 if (hits[y].collider.TryGetComponent(out ZombieBehaviour _zb))
@@ -233,7 +229,7 @@ public class PlayerWeapon : MonoBehaviour
                 }
             }
 
-            Debug.DrawRay(camTransform.position, _direction * 10, Color.green, 1);
+            //Debug.DrawRay(camTransform.position, _pos * 10, Color.green, 1);
         }
         currentWeapon.CanShoot = false;
         currentWeapon.TimeToShoot = 0;
@@ -249,11 +245,6 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Aim()
     {
-        //if ()
-        //{
-        //    Debug.Log("ne peut pas viser");
-        //    return;
-        //}
         if (Input.GetKey(KeyCode.Mouse1) && (!playerCtrl.IsRunning && !currentWeapon.IsReloading))
         {
             IsAiming = true;
@@ -276,17 +267,4 @@ public class PlayerWeapon : MonoBehaviour
 
     }
     #endregion
-
-    private void Moyenne(float _x, float _y)
-    {
-        //Debug.Log("x" + _x);
-        //Debug.Log("y" + _y);
-        X.Add(_x);
-        Y.Add(_y);
-        SommeX += _x;
-        SommeY += _y;
-
-        MoyX = SommeX / X.Count;
-        MoyY = SommeY / Y.Count;
-    }
 }

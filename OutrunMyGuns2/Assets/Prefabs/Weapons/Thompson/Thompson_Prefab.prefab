@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 8691167921862863183}
   - component: {fileID: 2302832724436157557}
   m_Layer: 0
-  m_Name: WeaponTest 2
+  m_Name: Thompson_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -170,7 +170,7 @@ MonoBehaviour:
   BulletsPerShoot: 1
   FireRate: 0.1
   TimeToShoot: 0
-  Precision: 5
+  Precision: 0.2
   canHold: 1
   SFX: {fileID: 0}
   recoil: {x: -3, y: 1, z: 0}
