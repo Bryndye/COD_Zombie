@@ -40,7 +40,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void Start()
     {
-        ChooseMySpeed();
+       //ChooseMySpeed();
     }
 
     #region Stat Move

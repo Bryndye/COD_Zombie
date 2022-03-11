@@ -5,6 +5,7 @@ public enum MovementState { Idle, Walk, Run}
 public class PlayerController : MonoBehaviour
 {
     CharacterController controller;
+    PlayerWeapon playerW;
     [SerializeField] TextMeshProUGUI textVelocity;
 
     [Header("Camera")]
@@ -31,12 +32,14 @@ public class PlayerController : MonoBehaviour
 
     [Header("Crouch")]
     public bool IsCrouching = false;
-    [SerializeField] Vector3 posCamCrouch;
+    [SerializeField] Vector3 posCamCrouch, posCamDefault;
     [SerializeField] float scaleCollider = 1, SpeedCrounchFactor = 0.5f;
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        playerW = GetComponent<PlayerWeapon>();
+        posCamDefault = cameraTransform.localPosition;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -118,7 +121,7 @@ public class PlayerController : MonoBehaviour
             MovementState = MovementState.Walk;
         }
         _moveDirection = transform.TransformDirection(_moveDirection);
-        controller.Move(_moveDirection * SpeedWalk * FacteurMovementManager() * (IsCrouching ? 0.5f : 1) * Time.deltaTime);
+        controller.Move(_moveDirection * SpeedWalk * FacteurMovementManager() * (IsCrouching ? 0.5f : 1) * (playerW.IsAiming ? 0.5f : 1) * Time.deltaTime);
     }
 
     private void Jump()
@@ -149,7 +152,7 @@ public class PlayerController : MonoBehaviour
             IsCrouching = false;
             MovementState = MovementState.Idle;
             controller.height = 2;
-            cameraTransform.localPosition = new Vector3(0, 0.85f, 0);
+            cameraTransform.localPosition = posCamDefault;
         }
     }
 }

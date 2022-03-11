@@ -65,7 +65,7 @@ public class WaveManager : MonoBehaviour
 
         CurrentZombies.Add(_zb);
         _zb.Life = GetHealthZombieRound();
-        _zb.MyState = GetSpeedZombieRound();
+        _zb.myNormalStates = GetSpeedZombieRound();
         _zb.ChooseMySpeed();
         _zb.Target = Players[0].transform;
 
@@ -121,6 +121,7 @@ public class WaveManager : MonoBehaviour
     {
         if (Round >= 7)
         {
+            Debug.Log("RUN !");
             return ZombieStates.Run;
         }
         else
