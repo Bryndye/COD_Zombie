@@ -30,6 +30,8 @@ public class ZombieBehaviour : MonoBehaviour
     }
     [SerializeField] float distanceDetection = 1f;
 
+    [SerializeField] Vector3 posPassThroughWindow;
+
     private void Awake()
     {
         nav = GetComponent<NavMeshAgent>();
@@ -85,7 +87,34 @@ public class ZombieBehaviour : MonoBehaviour
             nav.SetDestination(Target.position);
             RaycastFindPlayerToAttack();
         }
+        else if (MyState == ZombieStates.ThroughWall)
+        {
+            PassThroughTheWindow();
+        }
     }
+
+    private bool IsAWindow()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection))
+        {
+            if (hit.collider.TryGetComponent(out Window _w))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void PassThroughTheWindow()
+    {
+        transform.position = Vector3.Lerp(transform.position, posPassThroughWindow, 0.02f);
+        if (Vector3.Distance(transform.position, posPassThroughWindow) < 0.1f)
+        {
+            BackToNormalState();
+        }
+    }
+
 
     #region Attack
     private void RaycastFindPlayerToAttack()
@@ -93,7 +122,7 @@ public class ZombieBehaviour : MonoBehaviour
         //Debug.Log("atack");
         RaycastHit hit;
 
-        if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection) && MyState != ZombieStates.Attack)
+        if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection) && MyState != ZombieStates.Attack && MyState != ZombieStates.ThroughWall)
         {
             //Debug.Log("Je collide tout");
             if (hit.collider.TryGetComponent(out PlayerLife _pLife))
@@ -102,6 +131,23 @@ public class ZombieBehaviour : MonoBehaviour
                 MyState = ZombieStates.Attack;
                 nav.isStopped = true;
                 anim.SetTrigger("Attack");
+            }
+            else if (hit.collider.TryGetComponent(out Window _w))
+            {
+                if (_w.plankStill <= 0)
+                {
+                    anim.SetTrigger("Climb");
+                    nav.isStopped = true;
+                    nav.enabled = false;
+                    posPassThroughWindow = _w.finalPosZombie.position;
+                    MyState = ZombieStates.ThroughWall;
+                }
+                else
+                {
+                    MyState = ZombieStates.Attack;
+                    nav.isStopped = true;
+                    anim.SetTrigger("AttackWindow");
+                }
             }
         }
     }
@@ -115,12 +161,17 @@ public class ZombieBehaviour : MonoBehaviour
             {
                 _pLife.TakeDamage(50, transform);
             }
+            else if (hit.collider.TryGetComponent(out Window _w))
+            {
+                _w.TakeDamage();
+            }
         }
     }
     #endregion
 
     public void BackToNormalState()
     {
+        nav.enabled = true;
         nav.isStopped = false;
         MyState = myNormalStates;
     }
@@ -152,6 +203,7 @@ public class ZombieBehaviour : MonoBehaviour
         MyState = ZombieStates.Dead;
         anim.SetTrigger("Dying");
         nav.isStopped = true;
+        nav.enabled = false;
         waveMan.RemoveZombie(this);
         Invoke(nameof(DisableZombie), 10);
 

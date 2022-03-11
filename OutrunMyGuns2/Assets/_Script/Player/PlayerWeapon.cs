@@ -30,6 +30,7 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] Camera camWeapon;
     Vector3 difference { get { return new Vector3(0, currentWeapon.AimPos.localPosition.y, 0); } }
     float coefTotal = 1, coefAim = 1, coefMovement = 1, coefShooting = 1, coefCrouch = 1;
+    public Vector3 VECTORCAMTEST;
 
     [Header("Perks Effets")]
     public float MultiplicateurBullets = 1;
@@ -200,16 +201,24 @@ public class PlayerWeapon : MonoBehaviour
         if (currentWeapon.SFX != null)
             currentWeapon.SFX.Play();
 
+        //Ray ray = camWeapon.ScreenPointToRay(VECTORCAMTEST);
+        //Debug.DrawRay(ray.origin, ray.direction * 10, Color.red);
+
         for (int i = 0; i < currentWeapon.BulletsPerShoot * MultiplicateurBullets; i++)
         {
             Vector3 _posInit = Vector3.zero;
+            Vector3 _direction = camTransform.forward;
 
-            
             _posInit = Random.insideUnitSphere * distance * Mathf.Tan(ration);
+            RaycastHit _hit;
+            if (Physics.Raycast(camTransform.position + _posInit, camTransform.forward, out _hit, 300, ~ignoreLayerShoot))
+            {
+                _direction = _hit.point - camTransform.position;
+            }
 
             //_direction = Quaternion.Euler(0, indexLOCAL, 0) * _direction;
 
-            RaycastHit[] hits = Physics.RaycastAll(camTransform.position + _posInit, camTransform.forward, 100, ~ignoreLayerShoot);
+            RaycastHit[] hits = Physics.RaycastAll(camTransform.position, _direction, 300, ~ignoreLayerShoot);
             for (int y = 0; y < hits.Length; y++)
             {
                 if (hits[y].collider.TryGetComponent(out ZombieBehaviour _zb))
@@ -227,9 +236,9 @@ public class PlayerWeapon : MonoBehaviour
                         Instantiate(PREFAB_TEST_SHOOT, hits[y].point, Quaternion.identity);
 
                 }
+                Debug.DrawRay(camTransform.position, _direction * 10, Color.green, 1);
             }
 
-            //Debug.DrawRay(camTransform.position, _pos * 10, Color.green, 1);
         }
         currentWeapon.CanShoot = false;
         currentWeapon.TimeToShoot = 0;

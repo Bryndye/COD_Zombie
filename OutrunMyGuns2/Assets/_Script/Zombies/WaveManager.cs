@@ -13,6 +13,8 @@ public class WaveManager : MonoBehaviour
     public int Round = 0;
     public int ZombiesPerRound = 0, ZombiesLeft = 0;
     [SerializeField] AudioSource audioNewRound;
+    [SerializeField] AudioClip[] audios;
+    bool endRound = false;
 
     [Header("PoolSystem Zombies")]
     public ZombieBehaviour prefabZombie;
@@ -78,9 +80,9 @@ public class WaveManager : MonoBehaviour
     {
         roundT.text = Round.ToString();
 
-        if (ZombiesLeft <= 0)
+        if (ZombiesLeft <= 0 && !endRound)
         {
-            NewRound();
+            EndRound();
         }
 
         if (ZombiesPerRound <= 0)
@@ -136,9 +138,21 @@ public class WaveManager : MonoBehaviour
         ZombiesLeft--;
     }
 
+    private void EndRound()
+    {
+        endRound = true;
+        audioNewRound.clip = audios[0];
+        audioNewRound.Play();
+        Invoke(nameof(NewRound), 8f);
+    }
+
     private void NewRound()
     {
+        endRound = false;
+
         Round++;
+        audioNewRound.Stop();
+        audioNewRound.clip = audios[1];
         audioNewRound.Play();
         ZombiesPerRound = Mathf.RoundToInt((float)(0.000058 * Mathf.Pow(Round, 3) + 0.074032 * Mathf.Pow(Round, 2) + 0.718119 * Round + 14.38699));
         ZombiesLeft = ZombiesPerRound;
