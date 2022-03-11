@@ -18,8 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 minMaxVerticalValues;
 
     [Header("Movement")]
-    public MovementState MovementState;
-    public bool IsRunning = false;
+    public MovementState PlayerMvmtState;
     Vector3 velocity;
     public float SpeedWalk = 5f, SpeedRunFactor = 1.5f;
     float facteurStateMovement = 1;
@@ -73,18 +72,17 @@ public class PlayerController : MonoBehaviour
 
     private float FacteurMovementManager()
     {
-        switch (MovementState)
+        if (PlayerMvmtState == MovementState.Walk)
         {
-            case MovementState.Idle:
-                return facteurStateMovement = 1;
-
-            case MovementState.Walk:
-                return facteurStateMovement = 1;
-
-            case MovementState.Run:
-                return facteurStateMovement = 1.5f;
-            default:
-                return facteurStateMovement = 1;
+            return facteurStateMovement = 1;
+        }
+        else if (PlayerMvmtState == MovementState.Run)
+        {
+            return facteurStateMovement = 1.5f;
+        }
+        else
+        {
+            return facteurStateMovement = 1f;
         }
     }
 
@@ -107,18 +105,18 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
         {
-            MovementState = MovementState.Idle;
+            PlayerMvmtState = MovementState.Idle;
             return;
         }
         Vector3 _moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         
-        if (Input.GetKey(KeyCode.LeftShift) && !IsCrouching) //add bool if can run !
+        if (Input.GetKey(KeyCode.LeftShift) && !IsCrouching && Input.GetAxis("Vertical") > 0) //add bool if can run !
         {
-            MovementState = MovementState.Run;
+            PlayerMvmtState = MovementState.Run;
         }
         else
         {
-            MovementState = MovementState.Walk;
+            PlayerMvmtState = MovementState.Walk;
         }
         _moveDirection = transform.TransformDirection(_moveDirection);
         controller.Move(_moveDirection * SpeedWalk * FacteurMovementManager() * (IsCrouching ? 0.5f : 1) * (playerW.IsAiming ? 0.5f : 1) * Time.deltaTime);
@@ -150,7 +148,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             IsCrouching = false;
-            MovementState = MovementState.Idle;
+            PlayerMvmtState = MovementState.Idle;
             controller.height = 2;
             cameraTransform.localPosition = posCamDefault;
         }

@@ -101,7 +101,7 @@ public class PlayerWeapon : MonoBehaviour
     {
         coefAim = IsAiming ? 0.1f : 1;
         coefCrouch = playerCtrl.IsCrouching ? 0.5f : 1;
-        switch (playerCtrl.MovementState)
+        switch (playerCtrl.PlayerMvmtState)
         {
             case MovementState.Idle:
                 coefMovement = 1;
@@ -126,7 +126,7 @@ public class PlayerWeapon : MonoBehaviour
         MunChargT.text = currentWeapon.MunitionChargeur.ToString();
         MunStockT.text = currentWeapon.MunitionsStock.ToString();
 
-        Reticules.SetActive(!IsAiming && !playerCtrl.IsRunning);
+        Reticules.SetActive(!IsAiming && playerCtrl.PlayerMvmtState != MovementState.Run);
     }
 
 
@@ -190,7 +190,7 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Fire()
     {
-        if (!currentWeapon.CanShoot || playerCtrl.MovementState == MovementState.Run)
+        if (!currentWeapon.CanShoot || playerCtrl.PlayerMvmtState == MovementState.Run)
             return;
 
         camRecoil.RecoilFire();
@@ -245,7 +245,7 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Aim()
     {
-        if (Input.GetKey(KeyCode.Mouse1) && (!playerCtrl.IsRunning && !currentWeapon.IsReloading))
+        if (Input.GetKey(KeyCode.Mouse1) && playerCtrl.PlayerMvmtState != MovementState.Run && !currentWeapon.IsReloading)
         {
             IsAiming = true;
             camWeapon.fieldOfView = Mathf.Lerp(camWeapon.fieldOfView, currentWeapon.AimFov, currentWeapon.SpeedToScoop);
