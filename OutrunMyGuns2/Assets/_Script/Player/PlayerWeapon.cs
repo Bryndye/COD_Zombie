@@ -231,6 +231,11 @@ public class PlayerWeapon : MonoBehaviour
                 {
                     _head.TakeDamage(currentWeapon.Damage, this);
                 }
+                else if (hits[y].collider.TryGetComponent(out ElementInteractable _int))
+                {
+                    //Devrait etre en premier si on peut tirer dessus okazu
+                    _int.ActivateElement();
+                }
                 else
                 {
                     //Debug.Log(hit.collider.name);

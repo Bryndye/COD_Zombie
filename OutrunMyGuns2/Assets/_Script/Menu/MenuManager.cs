@@ -24,6 +24,7 @@ public class MenuManager : MonoBehaviour
     private void Start()
     {
         //OpenMenu(BackToTitleName);
+        Cursor.lockState = CursorLockMode.None;
     }
 
     #region Menu Objects Open/Close

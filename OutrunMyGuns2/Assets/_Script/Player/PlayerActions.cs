@@ -55,6 +55,13 @@ public class PlayerActions : MonoBehaviour
                     _w.Rebuild(pPoints);
                 }
             }
+            else if (hit.collider.TryGetComponent(out ElementInteractable _element))
+            {
+                if (!_element.isShootable && !_element.isShootable && Input.GetKeyDown(KeyCode.E))
+                {
+                    _element.ActivateElement();
+                }
+            } 
             else
             {
                 //Debug.Log(hit.collider.name);
