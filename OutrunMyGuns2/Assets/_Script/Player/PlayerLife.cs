@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,10 +8,11 @@ public class PlayerLife : MonoBehaviour
     [Header("Points life")]
     public float LifeMax = 150, Life = 150;
     [SerializeField] Image bloodScreen;
+    public bool IsDead = false;
 
     [Header("Regen")]
     bool isHurt = false;
-    [SerializeField] float TimeMax = 4f;
+    [SerializeField] float TimeToRegenMax = 4f;
     float timeRegen;
 
     private void Start()
@@ -31,10 +30,10 @@ public class PlayerLife : MonoBehaviour
     {
         float _alpha = 1 - Life / LifeMax;
 
-        if (_alpha > 255)  _alpha = 255;
-        else if (_alpha < 0)  _alpha = 0;
+        if (_alpha > 255) _alpha = 255;
+        else if (_alpha < 0) _alpha = 0;
 
-        bloodScreen.color = new Color(1,1,1, _alpha);
+        bloodScreen.color = new Color(1, 1, 1, _alpha);
     }
 
     private void Regen()
@@ -42,9 +41,9 @@ public class PlayerLife : MonoBehaviour
         if (isHurt)
         {
             timeRegen += Time.deltaTime;
-            if (timeRegen >= TimeMax)
+            if (timeRegen >= TimeToRegenMax)
             {
-                Life+= 5;
+                Life += 5;
             }
             if (Life >= LifeMax)
             {
@@ -57,6 +56,9 @@ public class PlayerLife : MonoBehaviour
 
     public void TakeDamage(int _dmg, Transform _zb)
     {
+        if (IsDead)
+            return;
+
         Life -= _dmg;
 
         isHurt = true;
@@ -66,7 +68,8 @@ public class PlayerLife : MonoBehaviour
 
         if (Life <= 0)
         {
-            Debug.Log("MORT ");
+            IsDead = true;
+            //Debug.Log("MORT ");
         }
     }
 }

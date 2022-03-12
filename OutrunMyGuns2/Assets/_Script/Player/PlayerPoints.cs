@@ -15,6 +15,9 @@ public class PlayerPoints : MonoBehaviour
     [SerializeField] Transform parentPoints;
     int index = 0;
 
+    [Header("Stats Player")]
+    public int Kills, HeadShoots;
+
     [Header("UI")]
     [SerializeField] int numberOfPointText = 30;
     [SerializeField] TextMeshProUGUI pointsText;
@@ -34,10 +37,6 @@ public class PlayerPoints : MonoBehaviour
     private void Update()
     {
         pointsText.text = Points.ToString();
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            GetPoints(10);
-        }
     }
 
 
@@ -74,6 +73,15 @@ public class PlayerPoints : MonoBehaviour
         if (index >= PointsT.Count)
         {
             index = 0;
+        }
+    }
+
+    public void GetStats(bool _headShoot)
+    {
+        Kills++;
+        if (_headShoot)
+        {
+            HeadShoots ++;
         }
     }
 }

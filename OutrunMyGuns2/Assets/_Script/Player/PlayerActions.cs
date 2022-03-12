@@ -30,7 +30,7 @@ public class PlayerActions : MonoBehaviour
         {
             if (hit.collider.TryGetComponent(out PerkBoitier _pkb) && !perksP.AlreadyHas(_pkb.MyPerk))
             {
-                Debug.Log("perks !");
+                //Debug.Log("perks !");
                 interactText.text = "Press E to buy " + _pkb.MyPerk.ToString() + " for " + _pkb.Cost;
 
                 if (Input.GetKeyDown(KeyCode.E) && pPoints.CanPlayerBuyIt(_pkb.Cost))

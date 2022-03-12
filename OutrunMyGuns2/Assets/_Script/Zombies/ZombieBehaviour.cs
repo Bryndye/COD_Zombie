@@ -7,7 +7,6 @@ public enum ZombieStates
     Run,
     ThroughWall,
     Attack,
-    Dead
 }
 public class ZombieBehaviour : MonoBehaviour
 {
@@ -21,6 +20,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     [Header("Health")]
     public int Life = 100;
+    public bool IsDead = false;
 
     [Header("Attack")]
     [SerializeField] Vector3 sphereTrigger;
@@ -82,7 +82,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     void ManageState()
     {
-        if (MyState == ZombieStates.Dead)
+        if (IsDead)
         {
             return;
         }
@@ -92,10 +92,6 @@ public class ZombieBehaviour : MonoBehaviour
             {
                 nav.SetDestination(Target.position);
                 RaycastFindPlayerToAttack();
-            }
-            else
-            {
-
             }
         }
         else if (MyState == ZombieStates.ThroughWall)
@@ -188,7 +184,7 @@ public class ZombieBehaviour : MonoBehaviour
     }
     public void TakeDamage(int _dmg, PlayerWeapon _player, bool _isHead = false)
     {
-        if (MyState == ZombieStates.Dead)
+        if (IsDead)
         {
             return;
         }
@@ -198,20 +194,20 @@ public class ZombieBehaviour : MonoBehaviour
         {
             Dying();
             if (_isHead)
-                _player.FeedbackHitZombie(100);
+                _player.FeedbackHit(100, true, true);
             else
-                _player.FeedbackHitZombie(50);
+                _player.FeedbackHit(50, true);
         }
         else
         {
-            _player.FeedbackHitZombie(10);
+            _player.FeedbackHit(10);
         }
     }
 
     public void Dying()
     {
         //Debug.Log("MORT ");
-        MyState = ZombieStates.Dead;
+        IsDead = true;
         anim.SetTrigger("Dying");
         if (nav.enabled)
         {

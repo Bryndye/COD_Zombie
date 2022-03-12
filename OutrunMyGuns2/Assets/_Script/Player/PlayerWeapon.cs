@@ -137,10 +137,12 @@ public class PlayerWeapon : MonoBehaviour
         Hitmarker.SetActive(true);
     }
 
-    public void FeedbackHitZombie(int _p)
+    public void FeedbackHit(int _p, bool _kill = false, bool _head = false)
     {
         HitmarkerActiveUI();
         playerPoints.GetPoints(_p);
+        if(_kill)
+            playerPoints.GetStats(_head);
     }
 
 
