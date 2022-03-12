@@ -12,10 +12,12 @@ public class Window : MonoBehaviour
     public float TimeMaxToRebuildAWindow = 1.5f;
     float timeToRebuild;
     bool isRebuild = false;
+    AudioSource audioBarrier;
 
     private void Awake()
     {
         posPlanksInit = new Vector3[planks.Length];
+        audioBarrier = GetComponent<AudioSource>();
 
         for (int i = 0; i < planks.Length; i++)
         {
@@ -64,6 +66,7 @@ public class Window : MonoBehaviour
             return;
         }
         isRebuild = true;
+        audioBarrier.Play();
         plankStill++;
         planks[plankStill -1].SetActive(true);
         _playerP.GetPoints(10);

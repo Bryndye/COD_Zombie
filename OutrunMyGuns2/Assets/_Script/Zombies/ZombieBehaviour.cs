@@ -82,10 +82,21 @@ public class ZombieBehaviour : MonoBehaviour
 
     void ManageState()
     {
+        if (MyState == ZombieStates.Dead)
+        {
+            return;
+        }
         if (MyState == ZombieStates.Walk || MyState == ZombieStates.Run)
         {
-            nav.SetDestination(Target.position);
-            RaycastFindPlayerToAttack();
+            if (Target != null)
+            {
+                nav.SetDestination(Target.position);
+                RaycastFindPlayerToAttack();
+            }
+            else
+            {
+
+            }
         }
         else if (MyState == ZombieStates.ThroughWall)
         {
@@ -202,8 +213,12 @@ public class ZombieBehaviour : MonoBehaviour
         //Debug.Log("MORT ");
         MyState = ZombieStates.Dead;
         anim.SetTrigger("Dying");
-        nav.isStopped = true;
+        if (nav.enabled)
+        {
+            nav.isStopped = true;
+        }
         nav.enabled = false;
+
         waveMan.RemoveZombie(this);
         Invoke(nameof(DisableZombie), 10);
 

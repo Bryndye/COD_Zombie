@@ -57,7 +57,7 @@ public class PlayerActions : MonoBehaviour
             }
             else
             {
-                Debug.Log(hit.collider.name);
+                //Debug.Log(hit.collider.name);
                 interactText.text = "";
             }
         }
