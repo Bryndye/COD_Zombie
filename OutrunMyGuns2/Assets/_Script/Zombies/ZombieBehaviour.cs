@@ -228,6 +228,7 @@ public class ZombieBehaviour : MonoBehaviour
     {
         anim.SetTrigger("Revive");
         anim.ResetTrigger("Revive");
+        IsDead = false;
 
         BackToNormalState();
         foreach (var item in myColliders)
