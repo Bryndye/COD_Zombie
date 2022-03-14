@@ -6,6 +6,7 @@ public class SpawnZombie : MonoBehaviour
 {
     WaveManager waveMan;
 
+    public Transform AssociateWindow;
     public bool canSpawn = false;
     public bool nearest = false;
 

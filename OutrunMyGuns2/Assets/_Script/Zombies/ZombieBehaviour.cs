@@ -16,7 +16,6 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] Collider[] myColliders;
     public ZombieStates MyState;
     [HideInInspector] public ZombieStates myNormalStates;
-    public Transform Target;
 
     [Header("Health")]
     public int Life = 100;
@@ -24,6 +23,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     [Header("Attack")]
     [SerializeField] Vector3 sphereTrigger;
+    public Transform Target, WindowTarget;
     Vector3 directionAttack
     {
         get { return transform.position + transform.TransformDirection(sphereTrigger); }
@@ -88,7 +88,12 @@ public class ZombieBehaviour : MonoBehaviour
     {
         if (MyState == ZombieStates.Walk || MyState == ZombieStates.Run)
         {
-            if (Target != null)
+            if (WindowTarget != null)
+            {
+                nav.SetDestination(WindowTarget.position);
+                RaycastFindPlayerToAttack();
+            }
+            else if (Target != null)
             {
                 nav.SetDestination(Target.position);
                 RaycastFindPlayerToAttack();
@@ -118,6 +123,7 @@ public class ZombieBehaviour : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, posPassThroughWindow, 0.02f);
         if (Vector3.Distance(transform.position, posPassThroughWindow) < 0.1f)
         {
+            WindowTarget = null;
             BackToNormalState();
         }
     }

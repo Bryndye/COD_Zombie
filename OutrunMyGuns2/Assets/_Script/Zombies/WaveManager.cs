@@ -54,7 +54,7 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    public void PoolAZombieToSpawn(Vector3 _pos)
+    public void PoolAZombieToSpawn(SpawnZombie _spawn)
     {
         indexZombies++;
         if (indexZombies >= numberOfZombiesToPool)
@@ -63,13 +63,14 @@ public class WaveManager : MonoBehaviour
         }
         var _zb = ZombiesPool[indexZombies];
 
-        _zb.transform.position = _pos;
+        _zb.transform.position = _spawn.transform.position;
         _zb.gameObject.SetActive(true);
 
         CurrentZombies.Add(_zb);
         _zb.Life = GetHealthZombieRound();
         _zb.myNormalStates = GetSpeedZombieRound();
         _zb.ChooseMySpeed();
+        _zb.WindowTarget = _spawn.AssociateWindow;
         _zb.Target = Players[0].transform;
 
         _zb.Reviving();
@@ -97,7 +98,8 @@ public class WaveManager : MonoBehaviour
         timeToSpawn += Time.deltaTime;
         if (timeToSpawn >= timeBetweenSpawn)
         {
-            PoolAZombieToSpawn(Spawns[Random.Range(0, Spawns.Count)].transform.position);
+            SpawnZombie _spawn = Spawns[Random.Range(0, Spawns.Count)];
+            PoolAZombieToSpawn(_spawn);
             //Spawns[Random.Range(0, Spawns.Count)].InstantiateZombies();
             //Spawn zombies sur les spawns parmis les CanSpawn && Nearest puis random entre tous ceux la
             //Plus on avance dans les rounds, plus les zombies spawn vite 
