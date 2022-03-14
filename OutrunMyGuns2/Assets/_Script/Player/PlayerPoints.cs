@@ -16,7 +16,7 @@ public class PlayerPoints : MonoBehaviour
     int index = 0;
 
     [Header("Stats Player")]
-    public int Kills, HeadShoots;
+    public int FinalPoints, Kills, HeadShoots, Deads;
 
     [Header("UI")]
     [SerializeField] int numberOfPointText = 30;
@@ -24,7 +24,10 @@ public class PlayerPoints : MonoBehaviour
     [SerializeField] TextMeshProUGUI tCost;
     public List<TextMeshProUGUI> PointsT;
 
-
+    private void Awake()
+    {
+        FinalPoints = startingPoints;
+    }
     private void Start()
     {
         Points = startingPoints;
@@ -58,12 +61,13 @@ public class PlayerPoints : MonoBehaviour
         Points -= _cost;
         tCost.text = "-" + _cost.ToString();
         AnimPoint.SetTrigger("Active");
-        //Feedback buy ?
+        //Feedback buy sound
     }
 
     public void GetPoints(int _points)
     {
         Points += _points;
+        FinalPoints += _points;
 
         PointsT[index].gameObject.SetActive(true);
         PointsT[index].GetComponent<PointsDirection>().ResetState();

@@ -31,6 +31,7 @@ public class WaveManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] TextMeshProUGUI roundT;
+    [SerializeField] Animator roundAnim;
 
     private void Awake()
     {
@@ -141,6 +142,7 @@ public class WaveManager : MonoBehaviour
     private void EndRound()
     {
         endRound = true;
+        roundAnim.SetTrigger("BeforeWave");
         audioNewRound.clip = audios[0];
         audioNewRound.Play();
         Invoke(nameof(NewRound), 8f);
@@ -149,7 +151,7 @@ public class WaveManager : MonoBehaviour
     private void NewRound()
     {
         endRound = false;
-
+        roundAnim.SetTrigger("NewWave");
         Round++;
         audioNewRound.Stop();
         audioNewRound.clip = audios[1];

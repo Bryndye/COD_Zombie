@@ -69,6 +69,7 @@ public class Weapon : MonoBehaviour
         }
         else
         {
+            IsReloading = true;
             GetAmmo();
         }
     }

@@ -77,15 +77,15 @@ public class ZombieBehaviour : MonoBehaviour
 
     void Update()
     {
+        if (IsDead)
+        {
+            return;
+        }
         ManageState();
     }
 
     void ManageState()
     {
-        if (IsDead)
-        {
-            return;
-        }
         if (MyState == ZombieStates.Walk || MyState == ZombieStates.Run)
         {
             if (Target != null)
@@ -182,7 +182,7 @@ public class ZombieBehaviour : MonoBehaviour
         nav.isStopped = false;
         MyState = myNormalStates;
     }
-    public void TakeDamage(int _dmg, PlayerWeapon _player, bool _isHead = false)
+    public void TakeDamage(int _dmg, PlayerWeapon _player, TypeKill _type = TypeKill.normal)
     {
         if (IsDead)
         {
@@ -193,8 +193,10 @@ public class ZombieBehaviour : MonoBehaviour
         if (Life <= 0)
         {
             Dying();
-            if (_isHead)
+            if (_type == TypeKill.Head)
                 _player.FeedbackHit(100, true, true);
+            else if (_type == TypeKill.cut)
+                _player.FeedbackHit(130, true, true);
             else
                 _player.FeedbackHit(50, true);
         }

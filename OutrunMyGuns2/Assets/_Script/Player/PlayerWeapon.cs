@@ -24,6 +24,7 @@ public class PlayerWeapon : MonoBehaviour
     public int CountMaxWeapons;
     public bool IS_INSTANTIATE_DEBUG_SHOOT = true;
     public GameObject PREFAB_TEST_SHOOT;
+    public bool IsReloading { get { return currentWeapon.IsReloading; } }
 
     [Header("Scope")]
     public float FovDefault;
@@ -31,6 +32,11 @@ public class PlayerWeapon : MonoBehaviour
     Vector3 difference { get { return new Vector3(0, currentWeapon.AimPos.localPosition.y, 0); } }
     float coefTotal = 1, coefAim = 1, coefMovement = 1, coefShooting = 1, coefCrouch = 1;
     public Vector3 VECTORCAMTEST;
+
+    [Header("Cut")]
+    [SerializeField] float distanceToCut = 1f;
+    [SerializeField] float DurationCutAnim = 0.5f;
+    public bool IsCutting = false;
 
     [Header("Perks Effets")]
     public float MultiplicateurBullets = 1;
@@ -40,6 +46,7 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] TextMeshProUGUI WeaponNameT;
     [SerializeField] TextMeshProUGUI MunChargT;
     [SerializeField] TextMeshProUGUI MunStockT;
+    [SerializeField] TextMeshProUGUI ReloadT;
     [SerializeField] TextMeshProUGUI COEFPRECISION;
     [SerializeField] GameObject Hitmarker, Reticules;
     [SerializeField] RectTransform[] ReticulesT;
@@ -65,10 +72,15 @@ public class PlayerWeapon : MonoBehaviour
         GetPrecision();
         InputManager();
         UI();
+
     }
 
     void InputManager()
     {
+        if (IsCutting)
+        {
+            return;
+        }
         if (currentWeapon.canHold && Input.GetAxisRaw("Fire1") != 0)
         {
             Fire();
@@ -91,7 +103,7 @@ public class PlayerWeapon : MonoBehaviour
         {
             Scroll();
         }
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && !IsCutting)
         {
             Cut();
         }
@@ -105,13 +117,16 @@ public class PlayerWeapon : MonoBehaviour
         switch (playerCtrl.PlayerMvmtState)
         {
             case MovementState.Idle:
+                animHands.SetBool("Run", false);
                 coefMovement = 1;
                 break;
             case MovementState.Walk:
-                coefMovement = 2f;
+                animHands.SetBool("Run", false);
+                coefMovement = 1.5f;
                 break;
             case MovementState.Run:
-                coefMovement = 3f;
+                animHands.SetBool("Run", true);
+                coefMovement = 2f;
                 break;
             default:
                 break;
@@ -125,9 +140,12 @@ public class PlayerWeapon : MonoBehaviour
     {
         WeaponNameT.text = currentWeapon.Name;
         MunChargT.text = currentWeapon.MunitionChargeur.ToString();
-        MunStockT.text = currentWeapon.MunitionsStock.ToString();
+        MunChargT.color = currentWeapon.MunitionChargeur < currentWeapon.MunitionsMaxChargeur * 0.3f ? Color.red : Color.white;
+        MunStockT.text = "/ " + currentWeapon.MunitionsStock.ToString();
+        MunStockT.color = currentWeapon.MunitionsStock < currentWeapon.MunitionsMaxChargeur * 2 ? Color.red : Color.white;
 
-        Reticules.SetActive(!IsAiming && playerCtrl.PlayerMvmtState != MovementState.Run);
+        ReloadT.gameObject.SetActive(currentWeapon.MunitionChargeur == 0);
+        Reticules.SetActive(!IsAiming && !IsCutting);
     }
 
 
@@ -229,7 +247,7 @@ public class PlayerWeapon : MonoBehaviour
                 }
                 else if (hits[y].collider.TryGetComponent(out PartOfBody _head))
                 {
-                    _head.TakeDamage(currentWeapon.Damage, this);
+                    _head.TakeDamage(currentWeapon.Damage, this, TypeKill.Head);
                 }
                 else if (hits[y].collider.TryGetComponent(out ElementInteractable _int))
                 {
@@ -280,7 +298,30 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Cut()
     {
+        animHands.SetTrigger("Cut");
+        IsCutting = true;
+        Invoke(nameof(EndCut), DurationCutAnim);
+        RaycastHit _hit;
+        if (Physics.Raycast(camTransform.position, camTransform.forward, out _hit, distanceToCut, ~ignoreLayerShoot))
+        {
+            //Debug.Log(_hit.collider.name);
+            if (IS_INSTANTIATE_DEBUG_SHOOT)
+                Instantiate(PREFAB_TEST_SHOOT, _hit.point, Quaternion.identity);
+            if (_hit.collider.TryGetComponent(out ZombieBehaviour _zb))
+            {
+                _zb.TakeDamage(150, this, TypeKill.cut);
+            }
+            else if (_hit.collider.TryGetComponent(out PartOfBody _head))
+            {
+                _head.TakeDamage(150, this, TypeKill.cut);
+            }
+            Debug.DrawRay(camTransform.position, camTransform.forward * 10, Color.blue, 1);
+        }
+    }
 
+    public void EndCut()
+    {
+        IsCutting = false;
     }
     #endregion
 }

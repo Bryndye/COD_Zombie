@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour
         }
         Vector3 _moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         
-        if (Input.GetKey(KeyCode.LeftShift) && !IsCrouching && Input.GetAxis("Vertical") > 0) //add bool if can run !
+        if (Input.GetKey(KeyCode.LeftShift) && !IsCrouching && Input.GetAxis("Vertical") > 0 && !playerW.IsReloading && !playerW.IsCutting) //add bool if can run !
         {
             PlayerMvmtState = MovementState.Run;
         }
