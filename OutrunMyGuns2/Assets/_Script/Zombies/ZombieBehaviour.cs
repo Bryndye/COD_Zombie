@@ -22,6 +22,7 @@ public class ZombieBehaviour : MonoBehaviour
     public bool IsDead = false;
 
     [Header("Attack")]
+    [SerializeField] LayerMask ignoreLayerAttack;
     [SerializeField] Vector3 sphereTrigger;
     public Transform Target, WindowTarget;
     Vector3 directionAttack
@@ -30,7 +31,7 @@ public class ZombieBehaviour : MonoBehaviour
     }
     [SerializeField] float distanceDetection = 1f;
 
-    [SerializeField] Vector3 posPassThroughWindow;
+    Vector3 posPassThroughWindow;
 
     private void Awake()
     {
@@ -82,6 +83,7 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
         ManageState();
+        IfPlayerBesideMe();
     }
 
     void ManageState()
@@ -105,6 +107,7 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
+    #region Window Manager
     private bool IsAWindow()
     {
         RaycastHit hit;
@@ -127,6 +130,17 @@ public class ZombieBehaviour : MonoBehaviour
             BackToNormalState();
         }
     }
+    #endregion
+
+    private void IfPlayerBesideMe()
+    {
+        if (Vector3.Distance(transform.position, Target.position) < 1)
+        {
+            Vector3 _dir = new Vector3(Target.position.x, transform.position.y, Target.position.z);
+            transform.LookAt(_dir);
+            nav.enabled = false;
+        }
+    }
 
 
     #region Attack
@@ -135,7 +149,7 @@ public class ZombieBehaviour : MonoBehaviour
         //Debug.Log("atack");
         RaycastHit hit;
 
-        if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection) && MyState != ZombieStates.Attack && MyState != ZombieStates.ThroughWall)
+        if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection, ~ignoreLayerAttack) && MyState != ZombieStates.Attack && MyState != ZombieStates.ThroughWall)
         {
             //Debug.Log("Je collide tout");
             if (hit.collider.TryGetComponent(out PlayerLife _pLife))
@@ -168,7 +182,7 @@ public class ZombieBehaviour : MonoBehaviour
     public void Scratch()
     {
         RaycastHit hit;
-        if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection))
+        if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection, ~ignoreLayerAttack))
         {
             if (hit.collider.TryGetComponent(out PlayerLife _pLife))
             {
@@ -182,12 +196,8 @@ public class ZombieBehaviour : MonoBehaviour
     }
     #endregion
 
-    public void BackToNormalState()
-    {
-        nav.enabled = true;
-        nav.isStopped = false;
-        MyState = myNormalStates;
-    }
+
+    #region Health system
     public void TakeDamage(int _dmg, PlayerWeapon _player, TypeKill _type = TypeKill.normal)
     {
         if (IsDead)
@@ -244,7 +254,16 @@ public class ZombieBehaviour : MonoBehaviour
             item.enabled = true;
         }
     }
+    #endregion
 
+
+    #region Other voids
+    public void BackToNormalState()
+    {
+        nav.enabled = true;
+        nav.isStopped = false;
+        MyState = myNormalStates;
+    }
     private void DisableZombie()
     {
         gameObject.SetActive(false);
@@ -254,4 +273,5 @@ public class ZombieBehaviour : MonoBehaviour
     {
         Debug.DrawRay(directionAttack, transform.forward,Color.red);
     }
+    #endregion
 }

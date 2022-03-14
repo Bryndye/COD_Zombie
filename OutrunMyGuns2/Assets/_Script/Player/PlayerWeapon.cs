@@ -140,8 +140,30 @@ public class PlayerWeapon : MonoBehaviour
         MunStockT.text = "/ " + currentWeapon.MunitionsStock.ToString();
         MunStockT.color = currentWeapon.MunitionsStock < currentWeapon.MunitionsMaxChargeur * 2 ? Color.red : Color.white;
 
-        ReloadT.gameObject.SetActive(currentWeapon.MunitionChargeur == 0);
+        ReloadText();
         Reticules.SetActive(!IsAiming && !playerCut.IsCutting);
+    }
+
+    private void ReloadText()
+    {
+        ReloadT.gameObject.SetActive(currentWeapon.MunitionChargeur < currentWeapon.MunitionsMaxChargeur * 0.3f);
+        if (ReloadT.IsActive())
+        {
+            if (currentWeapon.MunitionChargeur == 0 && currentWeapon.MunitionsStock == 0)
+            {
+                ReloadT.text = "No ammo";
+                ReloadT.GetComponent<Animator>().SetBool("HasAmmo", false);
+            }
+            else if(currentWeapon.MunitionChargeur < currentWeapon.MunitionsMaxChargeur * 0.3f && currentWeapon.MunitionsStock > 0)
+            {
+                ReloadT.text = "Press R to reload";
+                ReloadT.GetComponent<Animator>().SetBool("HasAmmo", true);
+            }
+            else
+            {
+                ReloadT.text = "";
+            }
+        }
     }
 
 
