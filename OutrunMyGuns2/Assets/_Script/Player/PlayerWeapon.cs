@@ -7,23 +7,23 @@ public class PlayerWeapon : MonoBehaviour
 {
     PlayerController playerCtrl;
     PlayerPoints playerPoints;
+    PlayerCut playerCut;
 
     [Header("Pos weapons")]
     public bool IsAiming = false;
     [SerializeField] Transform defaultPos, aimPos;
     [SerializeField] Transform weaponListT;
     [SerializeField] CameraRecoil camRecoil;
+    [SerializeField] Transform camTransform;
+    [HideInInspector] public Transform CamTransfrom { get {return camTransform; } }
 
 
     [Header("Mes Armes")]
-    [SerializeField] Transform camTransform;
     [SerializeField] LayerMask ignoreLayerShoot;
-    [SerializeField] Animator animHands;
+    public Animator AnimHands, AnimCam;
     public List<Weapon> MyWeapons;
     public Weapon currentWeapon;
     public int CountMaxWeapons;
-    public bool IS_INSTANTIATE_DEBUG_SHOOT = true;
-    public GameObject PREFAB_TEST_SHOOT;
     public bool IsReloading { get { return currentWeapon.IsReloading; } }
 
     [Header("Scope")]
@@ -32,11 +32,6 @@ public class PlayerWeapon : MonoBehaviour
     Vector3 difference { get { return new Vector3(0, currentWeapon.AimPos.localPosition.y, 0); } }
     float coefTotal = 1, coefAim = 1, coefMovement = 1, coefShooting = 1, coefCrouch = 1;
     public Vector3 VECTORCAMTEST;
-
-    [Header("Cut")]
-    [SerializeField] float distanceToCut = 1f;
-    [SerializeField] float DurationCutAnim = 0.5f;
-    public bool IsCutting = false;
 
     [Header("Perks Effets")]
     public float MultiplicateurBullets = 1;
@@ -51,10 +46,15 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] GameObject Hitmarker, Reticules;
     [SerializeField] RectTransform[] ReticulesT;
 
+    [Header("Debug")]
+    public bool IS_INSTANTIATE_DEBUG_SHOOT = true;
+    public GameObject PREFAB_TEST_SHOOT;
+
     private void Awake()
     {
         playerCtrl = GetComponent<PlayerController>();
         playerPoints = GetComponent<PlayerPoints>();
+        playerCut = GetComponent<PlayerCut>();
     }
 
     void Start()
@@ -77,7 +77,7 @@ public class PlayerWeapon : MonoBehaviour
 
     void InputManager()
     {
-        if (IsCutting)
+        if (playerCut.IsCutting)
         {
             return;
         }
@@ -103,10 +103,6 @@ public class PlayerWeapon : MonoBehaviour
         {
             Scroll();
         }
-        if (Input.GetKeyDown(KeyCode.F) && !IsCutting)
-        {
-            Cut();
-        }
         Aim();
     }
 
@@ -117,15 +113,15 @@ public class PlayerWeapon : MonoBehaviour
         switch (playerCtrl.PlayerMvmtState)
         {
             case MovementState.Idle:
-                animHands.SetBool("Run", false);
+                AnimHands.SetBool("Run", false);
                 coefMovement = 1;
                 break;
             case MovementState.Walk:
-                animHands.SetBool("Run", false);
+                AnimHands.SetBool("Run", false);
                 coefMovement = 1.5f;
                 break;
             case MovementState.Run:
-                animHands.SetBool("Run", true);
+                AnimHands.SetBool("Run", true);
                 coefMovement = 2f;
                 break;
             default:
@@ -144,8 +140,30 @@ public class PlayerWeapon : MonoBehaviour
         MunStockT.text = "/ " + currentWeapon.MunitionsStock.ToString();
         MunStockT.color = currentWeapon.MunitionsStock < currentWeapon.MunitionsMaxChargeur * 2 ? Color.red : Color.white;
 
-        ReloadT.gameObject.SetActive(currentWeapon.MunitionChargeur == 0);
-        Reticules.SetActive(!IsAiming && !IsCutting);
+        ReloadText();
+        Reticules.SetActive(!IsAiming && !playerCut.IsCutting);
+    }
+
+    private void ReloadText()
+    {
+        ReloadT.gameObject.SetActive(currentWeapon.MunitionChargeur < currentWeapon.MunitionsMaxChargeur * 0.3f);
+        if (ReloadT.IsActive())
+        {
+            if (currentWeapon.MunitionChargeur == 0 && currentWeapon.MunitionsStock == 0)
+            {
+                ReloadT.text = "No ammo";
+                ReloadT.GetComponent<Animator>().SetBool("HasAmmo", false);
+            }
+            else if(currentWeapon.MunitionChargeur < currentWeapon.MunitionsMaxChargeur * 0.3f && currentWeapon.MunitionsStock > 0)
+            {
+                ReloadT.text = "Press R to reload";
+                ReloadT.GetComponent<Animator>().SetBool("HasAmmo", true);
+            }
+            else
+            {
+                ReloadT.text = "";
+            }
+        }
     }
 
 
@@ -294,34 +312,6 @@ public class PlayerWeapon : MonoBehaviour
             camWeapon.fieldOfView = Mathf.Lerp(camWeapon.fieldOfView, FovDefault, currentWeapon.SpeedToScoop);
             weaponListT.transform.localPosition = Vector3.Lerp(weaponListT.transform.localPosition, defaultPos.localPosition, currentWeapon.SpeedToScoop);
         }
-    }
-
-    public void Cut()
-    {
-        animHands.SetTrigger("Cut");
-        IsCutting = true;
-        Invoke(nameof(EndCut), DurationCutAnim);
-        RaycastHit _hit;
-        if (Physics.Raycast(camTransform.position, camTransform.forward, out _hit, distanceToCut, ~ignoreLayerShoot))
-        {
-            //Debug.Log(_hit.collider.name);
-            if (IS_INSTANTIATE_DEBUG_SHOOT)
-                Instantiate(PREFAB_TEST_SHOOT, _hit.point, Quaternion.identity);
-            if (_hit.collider.TryGetComponent(out ZombieBehaviour _zb))
-            {
-                _zb.TakeDamage(150, this, TypeKill.cut);
-            }
-            else if (_hit.collider.TryGetComponent(out PartOfBody _head))
-            {
-                _head.TakeDamage(150, this, TypeKill.cut);
-            }
-            Debug.DrawRay(camTransform.position, camTransform.forward * 10, Color.blue, 1);
-        }
-    }
-
-    public void EndCut()
-    {
-        IsCutting = false;
     }
     #endregion
 }

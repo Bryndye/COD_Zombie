@@ -6,7 +6,7 @@ public class FindEnemy : MonoBehaviour
 {
     public Transform Enemy; //le transform de l'ennemi que vous voulez target
     public Transform pointer; //Pour debug InGame la rotation/ l'objet que vous voulez rotate
-
+    public float SpeedAngular = 1f;
     private float angle;
     private float alpha;
     private int coefficient; // le coeff sert pour savoir si l'ennemi est à droite ou gauche
@@ -14,13 +14,9 @@ public class FindEnemy : MonoBehaviour
     private bool running;
 
     [Header("init var")]
-    Vector3 a;
-    Vector3 b;
-    Vector3 c;
+    Vector3 a, b,c;
 
-    float A;
-    float B;
-    float C;
+    float A, B, C;
 
     private float timer;
    
@@ -74,7 +70,7 @@ public class FindEnemy : MonoBehaviour
             if (!float.IsNaN(angle))
             {
                 //print("alpha : " + angle + "angle: " + angle);
-                pointer.localEulerAngles = new Vector3(pointer.localRotation.x, pointer.localRotation.y, Mathf.LerpAngle(pointer.localEulerAngles.z, angle, 0.1f));
+                pointer.localEulerAngles = new Vector3(pointer.localRotation.x, pointer.localRotation.y, Mathf.LerpAngle(pointer.localEulerAngles.z, angle, SpeedAngular));
             }
         }
     }

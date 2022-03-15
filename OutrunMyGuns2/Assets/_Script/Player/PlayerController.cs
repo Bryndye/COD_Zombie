@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     CharacterController controller;
     PlayerWeapon playerW;
+    PlayerCut playerCut;
     [SerializeField] TextMeshProUGUI textVelocity;
 
     [Header("Camera")]
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         playerW = GetComponent<PlayerWeapon>();
+        playerCut = GetComponent<PlayerCut>();
         posCamDefault = cameraTransform.localPosition;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -110,7 +112,7 @@ public class PlayerController : MonoBehaviour
         }
         Vector3 _moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         
-        if (Input.GetKey(KeyCode.LeftShift) && !IsCrouching && Input.GetAxis("Vertical") > 0 && !playerW.IsReloading && !playerW.IsCutting) //add bool if can run !
+        if (Input.GetKey(KeyCode.LeftShift) && !IsCrouching && Input.GetAxis("Vertical") > 0 && !playerW.IsReloading && !playerCut.IsCutting)
         {
             PlayerMvmtState = MovementState.Run;
         }

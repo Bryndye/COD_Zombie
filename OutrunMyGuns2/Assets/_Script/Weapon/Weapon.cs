@@ -91,6 +91,17 @@ public class Weapon : MonoBehaviour
         IsReloading = false;
     }
 
+    //Mise en place de rechargement darmes balle par balle (shotgun)
+    public void GetAmmoOneByOne()
+    {
+        Anim.SetTrigger("Reload");
+        IsReloading = true;
+        MunitionsStock--;
+        MunitionChargeur++;
+
+        IsReloading = false;
+    }
+
 
     public void MaxAmmo()
     {

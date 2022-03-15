@@ -178,7 +178,7 @@ MonoBehaviour:
   returnSpeed: 10
   AimPos: {fileID: 7409569260061937152}
   AimFov: 50
-  SpeedToScoop: 0.1
+  SpeedToScoop: 0.07
 --- !u!82 &2302832724436157557
 AudioSource:
   m_ObjectHideFlags: 0
