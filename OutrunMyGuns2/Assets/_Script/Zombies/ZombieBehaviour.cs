@@ -13,6 +13,8 @@ public class ZombieBehaviour : MonoBehaviour
     WaveManager waveMan;
     NavMeshAgent nav;
     Animator anim;
+    ZombieAudioManager zbAudio;
+
     [SerializeField] Collider[] myColliders;
     public ZombieStates MyState;
     [HideInInspector] public ZombieStates myNormalStates;
@@ -37,13 +39,8 @@ public class ZombieBehaviour : MonoBehaviour
     {
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
-        //myColliders = GetComponent<Collider>();
+        zbAudio = GetComponent<ZombieAudioManager>();
         waveMan = WaveManager.Instance;
-    }
-
-    private void Start()
-    {
-       //ChooseMySpeed();
     }
 
     #region Stat Move
@@ -82,6 +79,8 @@ public class ZombieBehaviour : MonoBehaviour
         {
             return;
         }
+        //if (nav.pathStatus == NavMeshPathStatus.PathComplete)
+        //    Debug.Log(transform.name + " " + nav.destination);
         ManageState();
         IfPlayerBesideMe();
     }
@@ -90,20 +89,37 @@ public class ZombieBehaviour : MonoBehaviour
     {
         if (MyState == ZombieStates.Walk || MyState == ZombieStates.Run)
         {
-            if (WindowTarget != null)
-            {
-                nav.SetDestination(WindowTarget.position);
-                RaycastFindPlayerToAttack();
-            }
-            else if (Target != null)
-            {
-                nav.SetDestination(Target.position);
-                RaycastFindPlayerToAttack();
-            }
+            NavigateToTarget();
+            RaycastFindPlayerToAttack();
         }
         else if (MyState == ZombieStates.ThroughWall)
         {
             PassThroughTheWindow();
+        }
+    }
+
+    private void NavigateToTarget()
+    {
+        if (!nav.enabled)
+        {
+            return;
+        }
+        if (WindowTarget != null)
+        {
+            if (nav.hasPath)
+            {
+                Debug.Log("le pathc existe");
+                nav.SetDestination(WindowTarget.position);
+                //nav.close  FIND A WAY TO GET CLOSER TO THE WINDOW !
+            }
+            else
+            {
+                Debug.Log("pas path");
+            }
+        }
+        else if (Target != null)
+        {
+            nav.SetDestination(Target.position);
         }
     }
 
@@ -146,18 +162,16 @@ public class ZombieBehaviour : MonoBehaviour
     #region Attack
     private void RaycastFindPlayerToAttack()
     {
-        //Debug.Log("atack");
         RaycastHit hit;
 
         if (Physics.Raycast(directionAttack, transform.forward, out hit, distanceDetection, ~ignoreLayerAttack) && MyState != ZombieStates.Attack && MyState != ZombieStates.ThroughWall)
         {
-            //Debug.Log("Je collide tout");
             if (hit.collider.TryGetComponent(out PlayerLife _pLife))
             {
-                //Debug.Log("Je collide player");
                 MyState = ZombieStates.Attack;
                 nav.isStopped = true;
                 anim.SetTrigger("Attack");
+                zbAudio.SoundAttack();
             }
             else if (hit.collider.TryGetComponent(out Window _w))
             {
@@ -227,6 +241,7 @@ public class ZombieBehaviour : MonoBehaviour
         //Debug.Log("MORT ");
         IsDead = true;
         anim.SetTrigger("Dying");
+        zbAudio.SoundDeath();
         if (nav.enabled)
         {
             nav.isStopped = true;
