@@ -7,16 +7,17 @@ public class Weapon : MonoBehaviour
     public Animator Anim;
 
     [Header("Munitions")]
-    public int MunitionsMaxStock = 80;
-    public int MunitionsMaxChargeur = 8;
-    public int MunitionsStock = 36, MunitionChargeur = 8;
+    public int AmmoMaxStock = 80;
+    public int AmmoMaxMag = 8;
+    public int AmmoStock = 36, AmmoMag = 8;
     [HideInInspector] public bool IsReloading = false;
+    public float ReloadTime = 1f;
 
     [Header("Fire")]
-    [HideInInspector] public bool CanShoot = false;
     public int Damage = 10;
     public int BulletsPerShoot = 1;
     public float FireRate = 0.4f;
+    [HideInInspector] public bool CanShoot = false;
     [HideInInspector] public float TimeToShoot = 0;
     [Tooltip("Plus proche de 1 plus precis, plus proche de 0 moins precis")]
     public float Precision = 0.1f;
@@ -49,7 +50,7 @@ public class Weapon : MonoBehaviour
         {
             CanShoot = false;
         }
-        else if (!CanShoot && MunitionChargeur > 0)
+        else if (!CanShoot && AmmoMag > 0)
         {
             TimeToShoot += Time.deltaTime;
             if (TimeToShoot >= FireRate)
@@ -70,34 +71,36 @@ public class Weapon : MonoBehaviour
         else
         {
             IsReloading = true;
-            GetAmmo();
+            Invoke(nameof(GetAmmo), ReloadTime / _mutli);
         }
     }
 
     private void GetAmmo()
     {
-        int _needAmmo = MunitionsMaxChargeur - MunitionChargeur;
-        if (_needAmmo >= MunitionsStock)
+        //Debug.Log("reload done !" + gameObject);
+        int _needAmmo = AmmoMaxMag - AmmoMag;
+        if (_needAmmo >= AmmoStock)
         {
-            _needAmmo = MunitionsStock;
-            MunitionsStock -= _needAmmo;
+            _needAmmo = AmmoStock;
+            AmmoStock -= _needAmmo;
         }
         else
         {
-            MunitionsStock -= _needAmmo;
+            AmmoStock -= _needAmmo;
         }
-        MunitionChargeur += _needAmmo;
+        AmmoMag += _needAmmo;
 
         IsReloading = false;
     }
 
     //Mise en place de rechargement darmes balle par balle (shotgun)
+    //on peut cut et recevoir les munitions ! Il ny a pas de cancel anim         CancelInvoke();
     public void GetAmmoOneByOne()
     {
         Anim.SetTrigger("Reload");
         IsReloading = true;
-        MunitionsStock--;
-        MunitionChargeur++;
+        AmmoStock--;
+        AmmoMag++;
 
         IsReloading = false;
     }
@@ -105,8 +108,8 @@ public class Weapon : MonoBehaviour
 
     public void MaxAmmo()
     {
-        MunitionsStock = MunitionsMaxStock;
-        MunitionChargeur = MunitionsMaxChargeur;
+        AmmoStock = AmmoMaxStock;
+        AmmoMag = AmmoMaxMag;
     }
 
 }

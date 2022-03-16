@@ -83,6 +83,7 @@ MonoBehaviour:
   MunitionsStock: 32
   MunitionChargeur: 8
   IsReloading: 0
+  ReloadTime: 2
   CanShoot: 0
   Damage: 30
   BulletsPerShoot: 1

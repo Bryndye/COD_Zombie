@@ -10,7 +10,7 @@ public class PlayerPoints : MonoBehaviour
     [SerializeField] int startingPoints = 500;
 
     [Header("Param")]
-    public Animator AnimPoint;
+    public GameObject AnimPoint;
     [SerializeField] GameObject prefabPointText;
     [SerializeField] Transform parentPoints;
     int index = 0;
@@ -58,9 +58,14 @@ public class PlayerPoints : MonoBehaviour
 
     public void Buy(int _cost)
     {
+        if (!CanPlayerBuyIt(_cost))
+        {
+            return;
+        }
         Points -= _cost;
         tCost.text = "-" + _cost.ToString();
-        AnimPoint.SetTrigger("Active");
+        AnimPoint.SetActive(false);
+        AnimPoint.SetActive(true);
         //Feedback buy sound
     }
 

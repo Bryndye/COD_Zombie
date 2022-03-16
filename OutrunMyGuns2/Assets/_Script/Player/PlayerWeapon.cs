@@ -77,33 +77,48 @@ public class PlayerWeapon : MonoBehaviour
 
     void InputManager()
     {
+        Aim();
+
         if (playerCut.IsCutting)
         {
             return;
         }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            SwitchWeaponUp();
+        }
+
         if (currentWeapon.canHold && Input.GetAxisRaw("Fire1") != 0)
         {
-            Fire();
+            if (currentWeapon.IsReloading)
+            {
+                CancelAnimReload();
+            }
+            else
+            {
+                Fire();
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Fire();
+            if (currentWeapon.IsReloading)
+            {
+                CancelAnimReload();
+            }
+            else
+            {
+                Fire();
+            }
         }
         else
         {
             coefShooting = 1;
         }
 
-
         if (Input.GetKeyDown(KeyCode.R))
         {
             Reload();
         }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Scroll();
-        }
-        Aim();
     }
 
     private void ModificateurAim()
@@ -135,29 +150,34 @@ public class PlayerWeapon : MonoBehaviour
     private void UI()
     {
         WeaponNameT.text = currentWeapon.Name;
-        MunChargT.text = currentWeapon.MunitionChargeur.ToString();
-        MunChargT.color = currentWeapon.MunitionChargeur < currentWeapon.MunitionsMaxChargeur * 0.3f ? Color.red : Color.white;
-        MunStockT.text = "/ " + currentWeapon.MunitionsStock.ToString();
-        MunStockT.color = currentWeapon.MunitionsStock < currentWeapon.MunitionsMaxChargeur * 2 ? Color.red : Color.white;
+        MunChargT.text = currentWeapon.AmmoMag.ToString();
+        MunChargT.color = currentWeapon.AmmoMag < currentWeapon.AmmoMaxMag * 0.3f ? Color.red : Color.white;
+        MunStockT.text = "/ " + currentWeapon.AmmoStock.ToString();
+        MunStockT.color = currentWeapon.AmmoStock < currentWeapon.AmmoMaxMag * 2 ? Color.red : Color.white;
 
         ReloadText();
-        Reticules.SetActive(!IsAiming && !playerCut.IsCutting);
+        Reticules.SetActive(!IsAiming && !playerCut.IsCutting && !currentWeapon.IsReloading);
     }
 
     private void ReloadText()
     {
-        ReloadT.gameObject.SetActive(currentWeapon.MunitionChargeur < currentWeapon.MunitionsMaxChargeur * 0.3f);
+        ReloadT.gameObject.SetActive(currentWeapon.AmmoMag < currentWeapon.AmmoMaxMag * 0.3f || currentWeapon.IsReloading);
         if (ReloadT.IsActive())
         {
-            if (currentWeapon.MunitionChargeur == 0 && currentWeapon.MunitionsStock == 0)
+            if (currentWeapon.AmmoMag == 0 && currentWeapon.AmmoStock == 0)
             {
-                ReloadT.text = "No ammo";
                 ReloadT.GetComponent<Animator>().SetBool("HasAmmo", false);
+                ReloadT.text = "No ammo";
             }
-            else if(currentWeapon.MunitionChargeur < currentWeapon.MunitionsMaxChargeur * 0.3f && currentWeapon.MunitionsStock > 0)
+            else if (currentWeapon.IsReloading)
             {
-                ReloadT.text = "Press R to reload";
                 ReloadT.GetComponent<Animator>().SetBool("HasAmmo", true);
+                ReloadT.text = "Reloading...";
+            }
+            else if(currentWeapon.AmmoMag < currentWeapon.AmmoMaxMag * 0.3f && currentWeapon.AmmoStock > 0)
+            {
+                ReloadT.GetComponent<Animator>().SetBool("HasAmmo", true);
+                ReloadT.text = "Press R to reload";
             }
             else
             {
@@ -211,8 +231,9 @@ public class PlayerWeapon : MonoBehaviour
     }
     #endregion
 
+
     #region Input Handler
-    public void Scroll()
+    public void SwitchWeaponUp()
     {
         int _index = MyWeapons.IndexOf(currentWeapon) + 1;
         if (_index >= MyWeapons.Count)
@@ -235,12 +256,9 @@ public class PlayerWeapon : MonoBehaviour
         camRecoil.RecoilFire();
         coefShooting = 2;
 
-        currentWeapon.MunitionChargeur--;
+        currentWeapon.AmmoMag--;
         if (currentWeapon.SFX != null)
             currentWeapon.SFX.Play();
-
-        //Ray ray = camWeapon.ScreenPointToRay(VECTORCAMTEST);
-        //Debug.DrawRay(ray.origin, ray.direction * 10, Color.red);
 
         for (int i = 0; i < currentWeapon.BulletsPerShoot * MultiplicateurBullets; i++)
         {
@@ -253,8 +271,6 @@ public class PlayerWeapon : MonoBehaviour
             {
                 _direction = _hit.point - camTransform.position;
             }
-
-            //_direction = Quaternion.Euler(0, indexLOCAL, 0) * _direction;
 
             RaycastHit[] hits = Physics.RaycastAll(camTransform.position, _direction, 300, ~ignoreLayerShoot);
             for (int y = 0; y < hits.Length; y++)
@@ -269,12 +285,10 @@ public class PlayerWeapon : MonoBehaviour
                 }
                 else if (hits[y].collider.TryGetComponent(out ElementInteractable _int))
                 {
-                    //Devrait etre en premier si on peut tirer dessus okazu
                     _int.ActivateElement();
                 }
                 else
                 {
-                    //Debug.Log(hit.collider.name);
                     if (IS_INSTANTIATE_DEBUG_SHOOT)
                         Instantiate(PREFAB_TEST_SHOOT, hits[y].point, Quaternion.identity);
 
@@ -289,7 +303,11 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Reload()
     {
-        if (currentWeapon.MunitionsStock > 0 && !currentWeapon.IsReloading)
+        if (currentWeapon.IsReloading)
+        {
+            return;
+        }
+        if (currentWeapon.AmmoStock > 0 && currentWeapon.AmmoMag != currentWeapon.AmmoMaxMag  && !currentWeapon.IsReloading)
         {
             currentWeapon.Reload(MultiplicateurSpeedReload);
         }
@@ -297,7 +315,7 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Aim()
     {
-        if (Input.GetKey(KeyCode.Mouse1) && playerCtrl.PlayerMvmtState != MovementState.Run && !currentWeapon.IsReloading)
+        if (Input.GetKey(KeyCode.Mouse1) && playerCtrl.PlayerMvmtState != MovementState.Run && !currentWeapon.IsReloading && !playerCut.IsCutting)
         {
             IsAiming = true;
             camWeapon.fieldOfView = Mathf.Lerp(camWeapon.fieldOfView, currentWeapon.AimFov, currentWeapon.SpeedToScoop);
@@ -314,4 +332,33 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
     #endregion
+
+    public void TakeWeapon(Weapon _weapon)
+    {
+        if (MyWeapons.Count >= CountMaxWeapons)
+        {
+            //current weapon a enlever de la list puis destroy
+            var _currentWDelete = currentWeapon;
+            MyWeapons.Remove(_currentWDelete);
+            Destroy(_currentWDelete.gameObject);
+        }
+        //instantiate nouvelle arme
+        //add to list Weapons
+        //active cette arme
+        var _futurWeapon = Instantiate(_weapon, weaponListT);
+        MyWeapons.Add(_futurWeapon);
+        foreach (var weapon in MyWeapons)
+        {
+            weapon.gameObject.SetActive(false);
+        }
+        currentWeapon = _futurWeapon;
+        currentWeapon.gameObject.SetActive(true);
+        //Debug.Log("I switch or get this weapon " + _weapon.Name);
+    }
+
+    public void CancelAnimReload()
+    {
+        currentWeapon.CancelInvoke();
+        currentWeapon.IsReloading = false;
+    }
 }
