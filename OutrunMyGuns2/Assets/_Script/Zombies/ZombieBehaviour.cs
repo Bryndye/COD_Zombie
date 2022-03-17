@@ -24,17 +24,20 @@ public class ZombieBehaviour : MonoBehaviour
     public int Life = 100;
     public bool IsDead = false;
 
+    [Header("Movement")]
+    public Transform Target, WindowTarget;
+    [SerializeField] bool pathComplete;
+    Vector3 posPassThroughWindow;
+    
     [Header("Attack")]
     [SerializeField] LayerMask ignoreLayerAttack;
     [SerializeField] Vector3 sphereTrigger;
-    public Transform Target, WindowTarget;
     Vector3 directionAttack
     {
         get { return transform.position + transform.TransformDirection(sphereTrigger); }
     }
     [SerializeField] float distanceDetection = 1f;
 
-    Vector3 posPassThroughWindow;
 
     private void Awake()
     {
@@ -85,8 +88,7 @@ public class ZombieBehaviour : MonoBehaviour
         {
             return;
         }
-        //if (nav.pathStatus == NavMeshPathStatus.PathComplete)
-        //    Debug.Log(transform.name + " " + nav.destination);
+
         ManageState();
         IfPlayerBesideMe();
     }
@@ -112,20 +114,25 @@ public class ZombieBehaviour : MonoBehaviour
         }
         if (WindowTarget != null)
         {
-            if (nav.hasPath)
-            {
-                Debug.Log("le pathc existe");
-                nav.SetDestination(WindowTarget.position);
-                //nav.close  FIND A WAY TO GET CLOSER TO THE WINDOW !
-            }
-            else
-            {
-                Debug.Log("pas path");
-            }
+            nav.SetDestination(GetPath(WindowTarget.position));
         }
         else if (Target != null)
         {
-            nav.SetDestination(Target.position);
+            nav.SetDestination(GetPath(Target.position));
+        }
+    }
+
+    private Vector3 GetPath(Vector3 _pos)
+    {
+        if (!pathComplete && nav.pathStatus == NavMeshPathStatus.PathComplete || nav.hasPath && nav.pathStatus == NavMeshPathStatus.PathPartial)
+        {
+            pathComplete = true;
+            return nav.destination;
+        }
+        else
+        {
+            pathComplete = false;
+            return _pos;
         }
     }
 

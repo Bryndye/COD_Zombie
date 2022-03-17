@@ -124,6 +124,6 @@ public class BonusManager : MonoBehaviour
         {
             return;
         }
-        Instantiate(Bonuses[Random.Range(0, Bonuses.Count)], _pos, Quaternion.identity);
+        Instantiate(Bonuses[Random.Range(0, Bonuses.Count)], _pos + Vector3.up, Quaternion.identity);
     }
 }

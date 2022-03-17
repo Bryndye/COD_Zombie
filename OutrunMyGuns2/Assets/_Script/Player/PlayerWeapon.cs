@@ -83,7 +83,7 @@ public class PlayerWeapon : MonoBehaviour
         {
             return;
         }
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A) && MyWeapons.Count > 1)
         {
             SwitchWeaponUp();
         }
