@@ -81,8 +81,9 @@ public class ManagerPartie : MonoBehaviour
         {
             player.gameObject.SetActive(false);
         }
-        mancheSurvive.text = "Vous avez survécu " + (waveManager.Round - 1) + "!";
+        mancheSurvive.text = "You survived " + (waveManager.Round - 1) + " rounds !";
         cinematicEnd.SetActive(true);
+        endGameText.SetActive(true);
         canvasStats.SetActive(true);
         musicEnd.Play();
         //Debug.Log("Anim cam");
