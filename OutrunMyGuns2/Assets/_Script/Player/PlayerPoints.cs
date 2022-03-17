@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerPoints : MonoBehaviour
 {
+    BonusManager bonusManager;
+
     [Header("Litteraly points")]
     public int Points;
     [SerializeField] int startingPoints = 500;
@@ -30,6 +32,7 @@ public class PlayerPoints : MonoBehaviour
     }
     private void Start()
     {
+        bonusManager = BonusManager.Instance;
         Points = startingPoints;
         for (int i = 0; i < numberOfPointText; i++)
         {
@@ -66,17 +69,33 @@ public class PlayerPoints : MonoBehaviour
         tCost.text = "-" + _cost.ToString();
         AnimPoint.SetActive(false);
         AnimPoint.SetActive(true);
-        //Feedback buy sound
+        //Feedback buy sound !!!!!!!!!!
     }
 
     public void GetPoints(int _points)
     {
-        Points += _points;
-        FinalPoints += _points;
+        int _finalPoints;
+        if (bonusManager != null)
+        {
+            if (bonusManager.IsDoublePoints)
+            {
+                _finalPoints = _points * 2;
+            }
+            else
+            {
+                _finalPoints = _points;
+            }
+        }
+        else
+        {
+            _finalPoints = _points;
+        }
+        Points += _finalPoints;
+        FinalPoints += _finalPoints;
 
         PointsT[index].gameObject.SetActive(true);
         PointsT[index].GetComponent<PointsDirection>().ResetState();
-        PointsT[index].text = "+" + _points.ToString();
+        PointsT[index].text = "+" + _finalPoints.ToString();
 
         index++;
         if (index >= PointsT.Count)

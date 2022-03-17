@@ -781,6 +781,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6744429065544536142}
   - component: {fileID: 6744429065544536143}
+  - component: {fileID: 5299968143468915754}
   - component: {fileID: 7447363137993710471}
   m_Layer: 0
   m_Name: ManagerPartie
@@ -820,12 +821,31 @@ MonoBehaviour:
   prefabPlayerStat: {fileID: 8433000431939302827, guid: e71b7efa398eb964892ca1417cfc57ce, type: 3}
   canvasStats: {fileID: 6744429063822713007}
   parentPStats: {fileID: 5015379473809515384}
+  Players:
+  - {fileID: 0}
   PlayersStats: []
   PlayersPoints: []
+  PlayersWeapon: []
   musicEnd: {fileID: 6744429063915836876}
   cinematicEnd: {fileID: 6744429063915836878}
   endGameText: {fileID: 8928852296800009722}
   mancheSurvive: {fileID: 7000064246775797743}
+--- !u!114 &5299968143468915754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6744429065544536136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 557503a0f0b162c4484456f184debe54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayersUI:
+  - {fileID: 0}
+  IsDoublePoints: 0
+  IsInstaKill: 0
 --- !u!82 &7447363137993710471
 AudioSource:
   m_ObjectHideFlags: 0
@@ -838,7 +858,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ea8b5c2f799eb094c8340d2979d3f4a5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0

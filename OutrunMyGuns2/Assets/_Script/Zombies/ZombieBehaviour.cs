@@ -10,10 +10,11 @@ public enum ZombieStates
 }
 public class ZombieBehaviour : MonoBehaviour
 {
-    WaveManager waveMan;
     NavMeshAgent nav;
     Animator anim;
     ZombieAudioManager zbAudio;
+    BonusManager bonusManager;
+    WaveManager waveManager;
 
     [SerializeField] Collider[] myColliders;
     public ZombieStates MyState;
@@ -40,7 +41,12 @@ public class ZombieBehaviour : MonoBehaviour
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
         zbAudio = GetComponent<ZombieAudioManager>();
-        waveMan = WaveManager.Instance;
+    }
+
+    private void Start()
+    {
+        waveManager = WaveManager.Instance;
+        bonusManager = BonusManager.Instance;
     }
 
     #region Stat Move
@@ -218,7 +224,16 @@ public class ZombieBehaviour : MonoBehaviour
         {
             return;
         }
-        Life -= _dmg;
+
+
+        if (bonusManager != null && bonusManager.IsInstaKill)
+        {
+            Life = 0;
+        }
+        else
+        {
+            Life -= _dmg;
+        }
 
         if (Life <= 0)
         {
@@ -248,12 +263,17 @@ public class ZombieBehaviour : MonoBehaviour
         }
         nav.enabled = false;
 
-        waveMan.RemoveZombie(this);
+        waveManager.RemoveZombie(this);
         Invoke(nameof(DisableZombie), 10);
 
         foreach (var item in myColliders)
         {
             item.enabled = false;
+        }
+
+        if (bonusManager != null && WindowTarget == null)
+        {
+            bonusManager.SpawnBonus(transform.position);
         }
     }
 

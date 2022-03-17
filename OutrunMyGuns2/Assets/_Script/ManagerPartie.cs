@@ -12,8 +12,10 @@ public class ManagerPartie : MonoBehaviour
     [Header("Stats Canvas")]
     [SerializeField] PlayerStats prefabPlayerStat;
     [SerializeField] GameObject canvasStats, parentPStats;
+    public List<PlayerLife> Players;
     public List<PlayerStats> PlayersStats;
     public List<PlayerPoints> PlayersPoints;
+    public List<PlayerWeapon> PlayersWeapon;
 
     [Header("Elements To Activate")]
     [SerializeField] AudioSource musicEnd;
@@ -30,15 +32,13 @@ public class ManagerPartie : MonoBehaviour
     private void Start()
     {
         waveManager = WaveManager.Instance;
-        foreach (var item in waveManager.Players)
+
+        for (int i = 0; i < Players.Count; i++)
         {
             PlayersStats.Add(Instantiate(prefabPlayerStat, parentPStats.transform));
-        }
-
-        for (int i = 0; i < waveManager.Players.Count; i++)
-        {
             PlayersStats[i].PlayerName.text = "Player " + i;
-            PlayersPoints.Add(waveManager.Players[i].GetComponent<PlayerPoints>());
+            PlayersPoints.Add(Players[i].GetComponent<PlayerPoints>());
+            PlayersWeapon.Add(Players[i].GetComponent<PlayerWeapon>());
         }
     }
 
@@ -53,7 +53,7 @@ public class ManagerPartie : MonoBehaviour
 
     private void UpdateStatPlayersUI()
     {
-        for (int i = 0; i < waveManager.Players.Count; i++)
+        for (int i = 0; i < Players.Count; i++)
         {
             PlayersStats[i].PlayerName.text = "Player " + i;
             PlayersStats[i].Points.text = PlayersPoints[i].FinalPoints.ToString();
@@ -68,7 +68,7 @@ public class ManagerPartie : MonoBehaviour
         {
             return;
         }
-        foreach (var player in waveManager.Players)
+        foreach (var player in Players)
         {
             if (!player.IsDead)
             {
@@ -77,7 +77,7 @@ public class ManagerPartie : MonoBehaviour
         }
         activate = true;
         Invoke(nameof(BackToMenu), 16);
-        foreach (var player in waveManager.Players)
+        foreach (var player in Players)
         {
             player.gameObject.SetActive(false);
         }
