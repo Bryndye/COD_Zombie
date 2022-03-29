@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Window : MonoBehaviour
 {
-    public bool Full;
+    public bool Full, CanRebuild = true;
     [SerializeField] GameObject[] planks;
     [SerializeField] Vector3[] posPlanksInit;
     public int plankStill = 5;
