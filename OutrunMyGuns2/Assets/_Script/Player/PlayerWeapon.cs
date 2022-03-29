@@ -14,7 +14,7 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] Transform defaultPos, aimPos;
     [SerializeField] Transform weaponListT;
     [SerializeField] CameraRecoil camRecoil;
-    [SerializeField] Transform camTransform;
+    [SerializeField] Transform camTransform, audioParent;
     [HideInInspector] public Transform CamTransfrom { get {return camTransform; } }
 
 
@@ -229,24 +229,6 @@ public class PlayerWeapon : MonoBehaviour
         ReticulesT[2].localPosition = new Vector3(_prec, 0, 0);
         ReticulesT[3].localPosition = new Vector3(-_prec, 0, 0);
     }
-    #endregion
-
-
-    #region Input Handler
-    public void SwitchWeaponUp()
-    {
-        int _index = MyWeapons.IndexOf(currentWeapon) + 1;
-        if (_index >= MyWeapons.Count)
-        {
-            _index = 0;
-        }
-        foreach (var item in MyWeapons)
-        {
-            item.gameObject.SetActive(false);
-        }
-        currentWeapon = MyWeapons[_index];
-        currentWeapon.gameObject.SetActive(true);
-    }
 
     public void Fire()
     {
@@ -257,8 +239,7 @@ public class PlayerWeapon : MonoBehaviour
         coefShooting = 2;
 
         currentWeapon.AmmoMag--;
-        if (currentWeapon.SFX != null)
-            currentWeapon.SFX.Play();
+        PoolSystem.Instance.SetSfx(currentWeapon.ClipShoot, audioParent);
 
         for (int i = 0; i < currentWeapon.BulletsPerShoot * MultiplicateurBullets; i++)
         {
@@ -299,6 +280,23 @@ public class PlayerWeapon : MonoBehaviour
         }
         currentWeapon.CanShoot = false;
         currentWeapon.TimeToShoot = 0;
+    }
+    #endregion
+
+    #region Input Handler
+    public void SwitchWeaponUp()
+    {
+        int _index = MyWeapons.IndexOf(currentWeapon) + 1;
+        if (_index >= MyWeapons.Count)
+        {
+            _index = 0;
+        }
+        foreach (var item in MyWeapons)
+        {
+            item.gameObject.SetActive(false);
+        }
+        currentWeapon = MyWeapons[_index];
+        currentWeapon.gameObject.SetActive(true);
     }
 
     public void Reload()

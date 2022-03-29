@@ -104,6 +104,11 @@ public class PlayerPoints : MonoBehaviour
         }
     }
 
+    private void TimeLapse()
+    {
+
+    }
+
     public void GetStats(bool _headShoot)
     {
         Kills++;

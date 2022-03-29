@@ -91,7 +91,7 @@ MonoBehaviour:
   TimeToShoot: 0
   Precision: 0.2
   canHold: 0
-  SFX: {fileID: 0}
+  ClipShoot: {fileID: 8300000, guid: 7cd0e2ab78b9c9d43a970efb2cad66d1, type: 3}
   recoil: {x: -1, y: 0, z: 0}
   snapiness: 10
   returnSpeed: 5
@@ -105,7 +105,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9187757261289858825}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7cd0e2ab78b9c9d43a970efb2cad66d1, type: 3}

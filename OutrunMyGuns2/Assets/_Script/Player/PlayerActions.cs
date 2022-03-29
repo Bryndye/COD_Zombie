@@ -100,7 +100,6 @@ public class PlayerActions : MonoBehaviour
             if (weapon.Name == _ww.PrefabWeapon.Name)
             {
                 _hasThis = true;
-                Debug.Log("cant buy");
                 break;
             }
         }

@@ -22,7 +22,7 @@ public class Weapon : MonoBehaviour
     [Tooltip("Plus proche de 1 plus precis, plus proche de 0 moins precis")]
     public float Precision = 0.1f;
     public bool canHold = true;
-    [HideInInspector] public AudioSource SFX;
+     public AudioClip ClipShoot;
 
     [Header("Recoil")]
     public Vector3 recoil;
@@ -32,11 +32,6 @@ public class Weapon : MonoBehaviour
     public Transform AimPos;
     public int AimFov;
     public float SpeedToScoop;
-
-    private void Awake()
-    {
-        SFX = GetComponent<AudioSource>();
-    }
 
     private void OnEnable()
     {

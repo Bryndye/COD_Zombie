@@ -5,7 +5,7 @@ using UnityEngine;
 public class PointsDirection : MonoBehaviour
 {
     Animator anim;
-
+    float speedMax = 5;
     public float speed = 5.0f;
     Vector3 direction;
     [Range(1, 2)]
@@ -22,6 +22,8 @@ public class PointsDirection : MonoBehaviour
         float _rngY = Random.Range(-7, 8);
         direction = new Vector3(10, _rngY, 0);
         anim.SetFloat("TimeFactor", Random.Range(1, TimeMax));
+
+        speed = Random.Range(2, speedMax);
     }
 
 
