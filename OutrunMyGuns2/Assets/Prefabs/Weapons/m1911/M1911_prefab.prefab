@@ -78,22 +78,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: M1911
   Anim: {fileID: 0}
-  MunitionsMaxStock: 80
-  MunitionsMaxChargeur: 8
-  MunitionsStock: 32
-  MunitionChargeur: 8
+  AmmoMaxStock: 80
+  AmmoMaxMag: 8
+  AmmoStock: 36
+  AmmoMag: 8
   IsReloading: 0
-  CanShoot: 0
+  ReloadTime: 2
   Damage: 30
   BulletsPerShoot: 1
   FireRate: 0.3
+  CanShoot: 0
   TimeToShoot: 0
   Precision: 0.2
   canHold: 0
   SFX: {fileID: 0}
-  recoil: {x: -2, y: 1, z: 0}
+  recoil: {x: -1, y: 0, z: 0}
   snapiness: 10
-  returnSpeed: 1
+  returnSpeed: 5
   AimPos: {fileID: 3635321459425122160}
   AimFov: 50
   SpeedToScoop: 0.7

@@ -42,7 +42,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
@@ -51,8 +51,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
+  MinDistance: 0.96995544
+  MaxDistance: 7.0176287
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -87,7 +87,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1304,7 +1304,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4953589076927999919}
-  - component: {fileID: 1430927910217273420}
+  - component: {fileID: 1816187007497931155}
   - component: {fileID: 4953589076927999918}
   - component: {fileID: 4953589076927999914}
   - component: {fileID: 4953589076927999912}
@@ -1333,8 +1333,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!65 &1430927910217273420
-BoxCollider:
+--- !u!136 &1816187007497931155
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1343,9 +1343,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.5, y: 1.7, z: 0.5}
-  m_Center: {x: 0, y: 0.85, z: 0}
+  m_Radius: 0.3
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!195 &4953589076927999918
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1360,7 +1361,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 360
-  m_StoppingDistance: 0
+  m_StoppingDistance: 0.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1400,7 +1401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myColliders:
-  - {fileID: 1430927910217273420}
+  - {fileID: 1816187007497931155}
   - {fileID: 7918367843681421015}
   MyState: 0
   myNormalStates: 0
@@ -1412,7 +1413,7 @@ MonoBehaviour:
   sphereTrigger: {x: 0, y: 1, z: 0}
   Target: {fileID: 0}
   WindowTarget: {fileID: 0}
-  distanceDetection: 1.2
+  distanceDetection: 1.5
 --- !u!114 &2233057511004652678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1425,9 +1426,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ee9a2bdbb10384b975bc146759c1cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MyAudioSource: {fileID: 0}
+  MyAudioSource: {fileID: 7639738489154932449}
   AmbientSounds:
-  - {fileID: 8300000, guid: 8da653db24493024f82033a759b1438f, type: 3}
   - {fileID: 8300000, guid: 6e61da5f44565504bbb33b9ced816e78, type: 3}
   - {fileID: 8300000, guid: 2c289921225711b4fb815c196fb4d073, type: 3}
   AttackSounds:
@@ -1437,6 +1437,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d103ecf125adb6b4894eaf48d22337fb, type: 3}
   - {fileID: 8300000, guid: 15c9c744e0a77ef489e71491a277c0e6, type: 3}
   - {fileID: 8300000, guid: 5565958dc1cfb7b40a8668648054324a, type: 3}
+  - {fileID: 8300000, guid: 8da653db24493024f82033a759b1438f, type: 3}
   RunSounds:
   - {fileID: 8300000, guid: ddc2c6cde97e0f041b399f252fbf7d56, type: 3}
   - {fileID: 8300000, guid: 2c2b4a14fd8565a4fb129dcb9036fa1c, type: 3}
@@ -1448,6 +1449,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3dad1b9ec2f874443b5b2186422291e2, type: 3}
   - {fileID: 8300000, guid: 1b3443fc4e1440742949321119f86e9f, type: 3}
   - {fileID: 8300000, guid: 1079b845c875dea4697432f096ece1fe, type: 3}
+  TimeMaxBetweenScream: 20
 --- !u!1 &4983674538071674835
 GameObject:
   m_ObjectHideFlags: 0

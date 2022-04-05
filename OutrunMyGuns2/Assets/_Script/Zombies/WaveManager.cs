@@ -5,7 +5,7 @@ using UnityEngine;
 public class WaveManager : MonoBehaviour
 {
     public static WaveManager Instance;
-
+    ManagerPartie managerPartie;
     public List<PlayerLife> Players;
     public List<SpawnZombie> Spawns;
 
@@ -40,6 +40,11 @@ public class WaveManager : MonoBehaviour
 
     private void Start()
     {
+        managerPartie = ManagerPartie.Instance;
+        for (int i = 0; i < managerPartie.Players.Count; i++)
+        {
+            Players.Add(managerPartie.Players[i]);
+        }
         InstantiateAllZombies();
         NewRound();
     }

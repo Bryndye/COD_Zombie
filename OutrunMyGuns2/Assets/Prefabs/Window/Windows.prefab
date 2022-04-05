@@ -122,7 +122,6 @@ GameObject:
   - component: {fileID: 7985038504425403666}
   - component: {fileID: 8087920446484051384}
   - component: {fileID: 758688007545159134}
-  - component: {fileID: 2390014471114181079}
   m_Layer: 0
   m_Name: Plank (5)
   m_TagString: Untagged
@@ -194,19 +193,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2390014471114181079
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 417814845827408381}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &977154781539527646
 GameObject:
   m_ObjectHideFlags: 0
@@ -218,7 +204,6 @@ GameObject:
   - component: {fileID: 3331864743700126429}
   - component: {fileID: 2806422566364452719}
   - component: {fileID: 4214214812524671403}
-  - component: {fileID: 9127832597579797431}
   m_Layer: 0
   m_Name: Plank (4)
   m_TagString: Untagged
@@ -290,19 +275,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &9127832597579797431
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 977154781539527646}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1679492024862843683
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,7 +397,6 @@ GameObject:
   - component: {fileID: 9205598558173870459}
   - component: {fileID: 6385973896458524174}
   - component: {fileID: 5959080664700093830}
-  - component: {fileID: 1993176986494662965}
   m_Layer: 0
   m_Name: Plank (3)
   m_TagString: Untagged
@@ -497,19 +468,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1993176986494662965
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2413839379616476042}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4217661632684994842
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,7 +492,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4217661632684994842}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.00000012665986, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -1.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4217661632751486727}
@@ -814,7 +772,6 @@ GameObject:
   - component: {fileID: 4217661633207499884}
   - component: {fileID: 4217661633207499891}
   - component: {fileID: 4217661633207499890}
-  - component: {fileID: 4217661633207499885}
   m_Layer: 0
   m_Name: Plank1
   m_TagString: Untagged
@@ -886,19 +843,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4217661633207499885
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4217661633207499887}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4217661633355101259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1167,7 +1111,6 @@ GameObject:
   - component: {fileID: 5620588070366726950}
   - component: {fileID: 1253739277260430863}
   - component: {fileID: 3054703989415336841}
-  - component: {fileID: 2863772235007048498}
   m_Layer: 0
   m_Name: Plank (2)
   m_TagString: Untagged
@@ -1239,19 +1182,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2863772235007048498
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5309584855489636409}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7731031327587723730
 GameObject:
   m_ObjectHideFlags: 0

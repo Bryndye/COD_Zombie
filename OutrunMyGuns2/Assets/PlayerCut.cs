@@ -20,8 +20,17 @@ public class PlayerCut : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F) && !IsCutting)
+        if (IsCutting)
         {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.F) && !playerWeapon.IsReloading)
+        {
+            Cut();
+        }
+        else if (Input.GetKeyDown(KeyCode.F) && playerWeapon.IsReloading)
+        {
+            playerWeapon.CancelAnimReload();
             Cut();
         }
     }

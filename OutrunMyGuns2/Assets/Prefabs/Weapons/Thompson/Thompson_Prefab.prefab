@@ -138,7 +138,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8691167921862863216}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5056973736451436260}
@@ -160,15 +160,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Thomspon
   Anim: {fileID: 0}
-  MunitionsMaxStock: 200
-  MunitionsMaxChargeur: 20
-  MunitionsStock: 100
-  MunitionChargeur: 20
+  AmmoMaxStock: 200
+  AmmoMaxMag: 20
+  AmmoStock: 200
+  AmmoMag: 20
   IsReloading: 0
-  CanShoot: 0
+  ReloadTime: 3
   Damage: 50
   BulletsPerShoot: 1
   FireRate: 0.1
+  CanShoot: 0
   TimeToShoot: 0
   Precision: 0.2
   canHold: 1
@@ -178,7 +179,7 @@ MonoBehaviour:
   returnSpeed: 10
   AimPos: {fileID: 7409569260061937152}
   AimFov: 50
-  SpeedToScoop: 0.07
+  SpeedToScoop: 0.7
 --- !u!82 &2302832724436157557
 AudioSource:
   m_ObjectHideFlags: 0
