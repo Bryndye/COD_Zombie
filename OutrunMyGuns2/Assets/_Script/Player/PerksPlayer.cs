@@ -124,23 +124,17 @@ public class PerksPlayer : MonoBehaviour
         {
             case Perks.Mastodonte:
                 return HasMasto;
-                break;
             case Perks.PassePass:
                 return HasPassPass;
-                break;
             case Perks.DoubleTap:
                 return HasDoubleTap;
-                break;
             case Perks.ThreeW:
                 return HasThreeW;
-                break;
             case Perks.Revive:
                 return HasRevive;
-                break;
 
             default:
                 return false;
-                break;
         }
     }
 

@@ -115,15 +115,17 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift) && !IsCrouching && Input.GetAxis("Vertical") > 0 && !playerCut.IsCutting)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) && playerW.IsReloading)
+            /*if (Input.GetKeyDown(KeyCode.LeftShift) && playerW.IsReloading)
             {
                 //Debug.Log("cancel anim reload from run");
                 playerW.CancelAnimReload();
             }
-            else if (!playerW.IsReloading)
+            else
+            if (!playerW.IsReloading)
             {
                 PlayerMvmtState = MovementState.Run;
-            }
+            }*/
+            PlayerMvmtState = MovementState.Run;
         }
         else
         {

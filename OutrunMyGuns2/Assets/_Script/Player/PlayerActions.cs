@@ -26,6 +26,7 @@ public class PlayerActions : MonoBehaviour
     {
         CheckFront();
     }
+
     private void CheckFront()
     {
         RaycastHit hit;
@@ -37,7 +38,7 @@ public class PlayerActions : MonoBehaviour
             }
             else if (hit.collider.TryGetComponent(out Window _w))
             {
-                if (_w.Full)
+                if (_w.Full || !_w.CanRebuild)
                 {
                     interactText.text = "";
                     return;
@@ -51,7 +52,11 @@ public class PlayerActions : MonoBehaviour
             else if (hit.collider.TryGetComponent(out ElementInteractable _element))
             {
                 InterectElements(_element);
-            } 
+            }
+            else if (hit.collider.TryGetComponent(out Door _door))
+            {
+                BuyDoor(_door);
+            }
             else
             {
                 //Debug.Log(hit.collider.name);
@@ -63,6 +68,8 @@ public class PlayerActions : MonoBehaviour
             interactText.text = "";
         }
     }
+
+    #region Fct for each interactions
 
     private void BuyPerk(PerkBoitier _pkb)
     {
@@ -93,7 +100,6 @@ public class PlayerActions : MonoBehaviour
             if (weapon.Name == _ww.PrefabWeapon.Name)
             {
                 _hasThis = true;
-                Debug.Log("cant buy");
                 break;
             }
         }
@@ -118,6 +124,17 @@ public class PlayerActions : MonoBehaviour
         }
     }
 
+    private void BuyDoor(Door _door)
+    {
+        interactText.text = "Press E to buy the door for " + _door.Cost;
+
+        if (Input.GetKeyDown(KeyCode.E) && pPoints.CanPlayerBuyIt(_door.Cost))
+        {
+            pPoints.Buy(_door.Cost);
+            _door.OpenTheDoor.Invoke();
+        }
+    }
+
     private void InterectElements(ElementInteractable _element)
     {
         if (!_element.isShootable && !_element.isShootable && Input.GetKeyDown(KeyCode.E))
@@ -125,4 +142,6 @@ public class PlayerActions : MonoBehaviour
             _element.ActivateElement();
         }
     }
+
+    #endregion
 }

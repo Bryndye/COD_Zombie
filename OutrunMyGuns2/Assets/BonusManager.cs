@@ -10,6 +10,8 @@ public class BonusManager : MonoBehaviour
 
     public List<PlayerUI> PlayersUI;
     public List<GameObject> Bonuses;
+    public List<AudioClip> SoundBonuses;
+    [SerializeField] AudioSource audioBonus;
 
     public bool IsDoublePoints, IsInstaKill;
     //public bool HasInstaKill, HasDoublePoints, HasMaxAmmo, HasNuke;
@@ -52,6 +54,8 @@ public class BonusManager : MonoBehaviour
     private void InstaKillEffect()
     {
         IsInstaKill = true;
+        audioBonus.clip = SoundBonuses[0];
+        audioBonus.Play();
         CancelInvoke(nameof(StopInstaKill));
         foreach (var playerUI in PlayersUI)
         {
@@ -74,6 +78,8 @@ public class BonusManager : MonoBehaviour
     private void DoublePointsEffect()
     {
         IsDoublePoints = true;
+        audioBonus.clip = SoundBonuses[1];
+        audioBonus.Play();
         CancelInvoke(nameof(StopDoublePoints));
         foreach (var playerUI in PlayersUI)
         {
@@ -94,6 +100,8 @@ public class BonusManager : MonoBehaviour
 
     private void MaxAmmoEffect()
     {
+        audioBonus.clip = SoundBonuses[2];
+        audioBonus.Play();
         foreach (var playerWeapon in managerPartie.PlayersWeapon)
         {
             foreach (var weapon in playerWeapon.MyWeapons)
@@ -109,6 +117,8 @@ public class BonusManager : MonoBehaviour
 
     private void NukeEffect()
     {
+        audioBonus.clip = SoundBonuses[3];
+        audioBonus.Play();
         foreach (var playerUI in PlayersUI)
         {
             playerUI.Effect("Kaboom !");
@@ -124,6 +134,6 @@ public class BonusManager : MonoBehaviour
         {
             return;
         }
-        Instantiate(Bonuses[Random.Range(0, Bonuses.Count)], _pos, Quaternion.identity);
+        Instantiate(Bonuses[Random.Range(0, Bonuses.Count)], _pos + Vector3.up, Quaternion.identity);
     }
 }
