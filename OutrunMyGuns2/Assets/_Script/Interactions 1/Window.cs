@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Window : MonoBehaviour
+public class Window : ItemInteraction
 {
     public bool Full, CanRebuild = true;
     [SerializeField] GameObject[] planks;
@@ -23,7 +23,6 @@ public class Window : MonoBehaviour
         {
             posPlanksInit[i] = planks[i].transform.localPosition;
         }
-
     }
 
     private void Start()
@@ -46,6 +45,7 @@ public class Window : MonoBehaviour
                 isRebuild = false;
             }
         }
+        MessageCanAppear = !Full && CanRebuild;
     }
 
     public void TakeDamage()
@@ -59,7 +59,15 @@ public class Window : MonoBehaviour
         planks[plankStill].SetActive(false);
     }
 
-    public void Rebuild(PlayerPoints _playerP)
+    public override void Interact(PlayerActions _playerActions)
+    {
+        if (Full || !CanRebuild)
+        {
+            return;
+        }
+        Rebuild(_playerActions);
+    }
+    public void Rebuild(PlayerActions _playerActions)
     {
         if (isRebuild)
         {
@@ -69,6 +77,6 @@ public class Window : MonoBehaviour
         audioBarrier.Play();
         plankStill++;
         planks[plankStill -1].SetActive(true);
-        _playerP.GetPoints(10);
+        _playerActions.pPoints.GetPoints(10);
     }
 }

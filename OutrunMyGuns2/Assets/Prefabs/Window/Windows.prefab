@@ -546,7 +546,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eec17b73df306c43b4e6cd7eed7757b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MyInt: 1
+  MessageForPlayer: Hold E to rebuild
+  MessageCanAppear: 1
   Full: 0
+  CanRebuild: 1
   planks:
   - {fileID: 4217661633207499887}
   - {fileID: 5309584855489636409}

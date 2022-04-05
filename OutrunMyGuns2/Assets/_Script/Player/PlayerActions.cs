@@ -8,7 +8,7 @@ public class PlayerActions : MonoBehaviour
     PlayerController pc;
     PlayerWeapon pw;
     PerksPlayer perksP;
-    PlayerPoints pPoints;
+    [HideInInspector] public PlayerPoints pPoints;
 
     [SerializeField] float distanceMaxInteraction;
     [SerializeField] LayerMask ignoreLayer;
@@ -36,30 +36,35 @@ public class PlayerActions : MonoBehaviour
             {
                 BuyPerk(_pkb);
             }
-            else if (hit.collider.TryGetComponent(out Window _w))
-            {
-                if (_w.Full || !_w.CanRebuild)
-                {
-                    interactText.text = "";
-                    return;
-                }
-                RepairWindow(_w);
-            }
             else if (hit.collider.TryGetComponent(out WeaponWall _ww))
             {
                 BuyWeapon(_ww);
-            }
-            else if (hit.collider.TryGetComponent(out ElementInteractable _element))
-            {
-                InterectElements(_element);
             }
             else if (hit.collider.TryGetComponent(out Door _door))
             {
                 BuyDoor(_door);
             }
+            else if (hit.collider.TryGetComponent(out ItemInteraction _gen))
+            {
+                interactText.text = _gen.MessageCanAppear ? _gen.MessageForPlayer : null;
+
+                if (_gen.MyInt == InteractionType.Press)
+                {
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        _gen.Interact(this);
+                    }
+                }
+                else
+                {
+                    if (Input.GetKey(KeyCode.E))
+                    {
+                        _gen.Interact(this);
+                    }
+                }
+            }
             else
             {
-                //Debug.Log(hit.collider.name);
                 interactText.text = "";
             }
         }
@@ -82,19 +87,10 @@ public class PlayerActions : MonoBehaviour
         }
     }
 
-    private void RepairWindow(Window _w)
-    {
-        interactText.text = "Hold E to rebuild";
-
-        if (Input.GetKey(KeyCode.E))
-        {
-            _w.Rebuild(pPoints);
-        }
-    }
-
     private void BuyWeapon(WeaponWall _ww)
     {
         bool _hasThis = false;
+        interactText.text = _ww.Message;
         foreach (var weapon in pw.MyWeapons)
         {
             if (weapon.Name == _ww.PrefabWeapon.Name)
@@ -105,8 +101,6 @@ public class PlayerActions : MonoBehaviour
         }
         if (_hasThis)
         {
-            interactText.text = "Press E to buy " + _ww.PrefabWeapon.Name + " ammo for [" + _ww.AmmoCost + "]";
-
             if (Input.GetKeyDown(KeyCode.E) && pPoints.CanPlayerBuyIt(_ww.AmmoCost))
             {
                 pPoints.Buy(_ww.AmmoCost);
@@ -115,7 +109,6 @@ public class PlayerActions : MonoBehaviour
         }
         else
         {
-            interactText.text = "Press E to buy " + _ww.PrefabWeapon.Name + " for [" + _ww.WeaponCost + "]";
             if (Input.GetKeyDown(KeyCode.E) && pPoints.CanPlayerBuyIt(_ww.WeaponCost))
             {
                 pPoints.Buy(_ww.WeaponCost);
@@ -132,14 +125,6 @@ public class PlayerActions : MonoBehaviour
         {
             pPoints.Buy(_door.Cost);
             _door.OpenTheDoor.Invoke();
-        }
-    }
-
-    private void InterectElements(ElementInteractable _element)
-    {
-        if (!_element.isShootable && !_element.isShootable && Input.GetKeyDown(KeyCode.E))
-        {
-            _element.ActivateElement();
         }
     }
 

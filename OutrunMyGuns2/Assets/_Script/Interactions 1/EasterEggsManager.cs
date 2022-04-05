@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Allinteractions : MonoBehaviour
+public class EasterEggsManager : MonoBehaviour
 {
-    public List<ElementInteractable> Elements;
+    public List<ItemEasterEgg> Elements;
 
-    public UnityEvent AllInteractionDone;
+    public UnityEvent EasterEggsDone;
     bool done = false;
 
     private void Update()
@@ -24,6 +24,6 @@ public class Allinteractions : MonoBehaviour
             }
         }
         done = true;
-        AllInteractionDone.Invoke();
+        EasterEggsDone.Invoke();
     }
 }

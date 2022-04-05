@@ -6,10 +6,10 @@ public class PerkBoitier : MonoBehaviour
 {
     public Perks MyPerk;
     public int Cost = 2500;
+    [HideInInspector] public string Message;
 
-    private void OnGUI()
+    private void Awake()
     {
-        transform.name = MyPerk.ToString() + " Botier";
+        Message = "Press E to buy " + MyPerk.ToString() + " for " + Cost;
     }
-
 }

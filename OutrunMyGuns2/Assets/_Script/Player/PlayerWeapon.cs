@@ -256,30 +256,32 @@ public class PlayerWeapon : MonoBehaviour
             RaycastHit[] hits = Physics.RaycastAll(camTransform.position, _direction, 300, ~ignoreLayerShoot);
             for (int y = 0; y < hits.Length; y++)
             {
-                if (hits[y].collider.TryGetComponent(out ZombieBehaviour _zb))
-                {
-                    _zb.TakeDamage(currentWeapon.Damage, this);
-                }
-                else if (hits[y].collider.TryGetComponent(out PartOfBody _head))
-                {
-                    _head.TakeDamage(currentWeapon.Damage, this, TypeKill.Head);
-                }
-                else if (hits[y].collider.TryGetComponent(out ElementInteractable _int))
-                {
-                    _int.ActivateElement();
-                }
-                else
-                {
-                    if (IS_INSTANTIATE_DEBUG_SHOOT)
-                        Instantiate(PREFAB_TEST_SHOOT, hits[y].point, Quaternion.identity);
+                HitGameObjectCheck(hits[y].collider.gameObject);
 
-                }
-                Debug.DrawRay(camTransform.position, _direction * 10, Color.green, 1);
+                if (IS_INSTANTIATE_DEBUG_SHOOT)
+                    Instantiate(PREFAB_TEST_SHOOT, hits[y].point, Quaternion.identity);
             }
+            Debug.DrawRay(camTransform.position, _direction * 10, Color.green, 1);
 
         }
         currentWeapon.CanShoot = false;
         currentWeapon.TimeToShoot = 0;
+    }
+
+    private void HitGameObjectCheck(GameObject _target)
+    {
+        if (_target.TryGetComponent(out ZombieBehaviour _zombie))
+        {
+            _zombie.TakeDamage(currentWeapon.Damage, this);
+        }
+        else if (_target.TryGetComponent(out PartOfBody _body))
+        {
+            _body.TakeDamage(currentWeapon.Damage, this, TypeKill.Head);
+        }
+        else if (_target.TryGetComponent(out ItemEasterEgg _int))
+        {
+            _int.ShootMe();
+        }
     }
     #endregion
 
