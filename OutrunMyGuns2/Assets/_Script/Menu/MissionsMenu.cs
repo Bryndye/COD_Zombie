@@ -47,12 +47,13 @@ public class MissionsMenu : MonoBehaviour
     public void OnPointerEnterBtnMission(int _indexList)
     {
         IllustrationPlace.sprite = Missions[_indexList].Illustration;
-        DecriptionPlace.text = Missions[_indexList].Description;
+        DecriptionPlace.text = Missions[_indexList].NameMission;
     }
 
     public void LaunchLevel(int _indexLevel) 
     {
-        SceneManager.LoadScene(_indexLevel);
+        PlayerPrefs.SetInt("SceneIndex", _indexLevel);
+        SceneManager.LoadScene("LoadingScreen");
     }
 }
 

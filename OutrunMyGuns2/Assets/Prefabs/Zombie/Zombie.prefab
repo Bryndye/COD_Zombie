@@ -51,8 +51,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 0.96995544
-  MaxDistance: 7.0176287
+  MinDistance: 1
+  MaxDistance: 5
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -1407,12 +1407,13 @@ MonoBehaviour:
   myNormalStates: 0
   Life: 150
   IsDead: 0
+  Target: {fileID: 0}
+  WindowTarget: {fileID: 0}
+  pathComplete: 0
   ignoreLayerAttack:
     serializedVersion: 2
     m_Bits: 1024
   sphereTrigger: {x: 0, y: 1, z: 0}
-  Target: {fileID: 0}
-  WindowTarget: {fileID: 0}
   distanceDetection: 1.5
 --- !u!114 &2233057511004652678
 MonoBehaviour:

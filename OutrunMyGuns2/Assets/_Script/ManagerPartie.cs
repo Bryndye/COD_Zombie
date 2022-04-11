@@ -81,7 +81,7 @@ public class ManagerPartie : MonoBehaviour
         {
             player.gameObject.SetActive(false);
         }
-        mancheSurvive.text = "You survived " + (waveManager.Round - 1) + " rounds !";
+        mancheSurvive.text = "You survived " + waveManager.Round + " rounds !";
         cinematicEnd.SetActive(true);
         endGameText.SetActive(true);
         canvasStats.SetActive(true);
