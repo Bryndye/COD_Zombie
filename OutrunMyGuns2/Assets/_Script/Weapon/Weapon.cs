@@ -6,6 +6,8 @@ public class Weapon : MonoBehaviour
 
     public Animator Anim;
 
+    [SerializeReference] public ScriptableWeaponStat stat;
+
     [Header("Munitions")]
     public int AmmoMaxStock = 80;
     public int AmmoMaxMag = 8;
@@ -89,7 +91,7 @@ public class Weapon : MonoBehaviour
     }
 
     //Mise en place de rechargement darmes balle par balle (shotgun)
-    //on peut cut et recevoir les munitions ! Il ny a pas de cancel anim         CancelInvoke();
+    //on peut cut et recevoir les munitions ! Il ny a pas de cancel anim CancelInvoke();
     public void GetAmmoOneByOne()
     {
         Anim.SetTrigger("Reload");

@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
         Vector3 _moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
 
-        if (Input.GetKey(KeyCode.LeftShift) && !IsCrouching && Input.GetAxis("Vertical") > 0 && !playerCut.IsCutting)
+        if (Input.GetKey(KeyCode.LeftShift) && !IsCrouching && Input.GetAxis("Vertical") > 0 && !playerCut.IsCutting && !playerW.IsAiming)
         {
             /*if (Input.GetKeyDown(KeyCode.LeftShift) && playerW.IsReloading)
             {

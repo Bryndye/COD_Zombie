@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TypeKill { Head, cut, normal}
+public enum TypeKill {None, Head, cut, normal}
 public class PartOfBody : MonoBehaviour
 {
     ZombieBehaviour zombieB;
@@ -12,7 +12,7 @@ public class PartOfBody : MonoBehaviour
         zombieB = GetComponentInParent<ZombieBehaviour>();
     }
 
-    public void TakeDamage(int _dmg, PlayerWeapon _player, TypeKill _type = TypeKill.Head)
+    public void TakeDamage(int _dmg, PlayerPoints _player, TypeKill _type = TypeKill.Head)
     {
         if (_type == TypeKill.Head)
         {

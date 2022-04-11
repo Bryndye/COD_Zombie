@@ -68,7 +68,7 @@ public class PerksPlayer : MonoBehaviour
     public void GetDoubleTap()
     {
         HasDoubleTap = true;
-        playerWeapon.MultiplicateurBullets = MuliplicateurBullets;
+        playerWeapon.MultiplicateurDamage = MuliplicateurBullets;
         IconDP.gameObject.SetActive(HasDoubleTap);
         IconDP.transform.SetSiblingIndex(0);
     }

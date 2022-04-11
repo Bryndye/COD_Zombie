@@ -78,6 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: M1911
   Anim: {fileID: 0}
+  stat: {fileID: 11400000, guid: 7c808091960d65f4b89a6832bc99a276, type: 2}
   AmmoMaxStock: 80
   AmmoMaxMag: 8
   AmmoStock: 36

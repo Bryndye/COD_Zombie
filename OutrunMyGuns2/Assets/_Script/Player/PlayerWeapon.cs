@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public class PlayerWeapon : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class PlayerWeapon : MonoBehaviour
     public Vector3 VECTORCAMTEST;
 
     [Header("Perks Effets")]
-    public float MultiplicateurBullets = 1;
+    public int MultiplicateurDamage = 1;
     public float MultiplicateurSpeedReload = 1;
 
     [Header("UI")]
@@ -129,14 +130,17 @@ public class PlayerWeapon : MonoBehaviour
         {
             case MovementState.Idle:
                 AnimHands.SetBool("Run", false);
+                AnimHands.SetBool("Walk", false);
                 coefMovement = 1;
                 break;
             case MovementState.Walk:
                 AnimHands.SetBool("Run", false);
+                AnimHands.SetBool("Walk", true);
                 coefMovement = 1.5f;
                 break;
             case MovementState.Run:
                 AnimHands.SetBool("Run", true);
+                AnimHands.SetBool("Walk", false);
                 coefMovement = 2f;
                 break;
             default:
@@ -187,20 +191,11 @@ public class PlayerWeapon : MonoBehaviour
     }
 
 
-    private void HitmarkerActiveUI()
+    public void HitmarkerActiveUI()
     {
         Hitmarker.SetActive(false);
         Hitmarker.SetActive(true);
     }
-
-    public void FeedbackHit(int _p, bool _kill = false, bool _head = false)
-    {
-        HitmarkerActiveUI();
-        playerPoints.GetPoints(_p);
-        if(_kill)
-            playerPoints.GetStats(_head);
-    }
-
 
     #endregion
 
@@ -241,7 +236,7 @@ public class PlayerWeapon : MonoBehaviour
         currentWeapon.AmmoMag--;
         PoolSystem.Instance.SetSfx(currentWeapon.ClipShoot, audioParent);
 
-        for (int i = 0; i < currentWeapon.BulletsPerShoot * MultiplicateurBullets; i++)
+        for (int i = 0; i < currentWeapon.BulletsPerShoot; i++)
         {
             Vector3 _posInit = Vector3.zero;
             Vector3 _direction = camTransform.forward;
@@ -272,11 +267,11 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (_target.TryGetComponent(out ZombieBehaviour _zombie))
         {
-            _zombie.TakeDamage(currentWeapon.Damage, this);
+            _zombie.TakeDamage(currentWeapon.Damage * MultiplicateurDamage, playerPoints);
         }
         else if (_target.TryGetComponent(out PartOfBody _body))
         {
-            _body.TakeDamage(currentWeapon.Damage, this, TypeKill.Head);
+            _body.TakeDamage(currentWeapon.Damage * MultiplicateurDamage, playerPoints, TypeKill.Head);
         }
         else if (_target.TryGetComponent(out ItemEasterEgg _int))
         {
@@ -315,7 +310,7 @@ public class PlayerWeapon : MonoBehaviour
 
     public void Aim()
     {
-        if (Input.GetKey(KeyCode.Mouse1) && playerCtrl.PlayerMvmtState != MovementState.Run && !currentWeapon.IsReloading && !playerCut.IsCutting)
+        if (Input.GetKey(KeyCode.Mouse1) && !currentWeapon.IsReloading && !playerCut.IsCutting)
         {
             IsAiming = true;
             camWeapon.fieldOfView = Mathf.Lerp(camWeapon.fieldOfView, currentWeapon.AimFov, currentWeapon.SpeedToScoop);
@@ -342,9 +337,7 @@ public class PlayerWeapon : MonoBehaviour
             MyWeapons.Remove(_currentWDelete);
             Destroy(_currentWDelete.gameObject);
         }
-        //instantiate nouvelle arme
-        //add to list Weapons
-        //active cette arme
+
         var _futurWeapon = Instantiate(_weapon, weaponListT);
         MyWeapons.Add(_futurWeapon);
         foreach (var weapon in MyWeapons)

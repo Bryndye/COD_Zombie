@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a08859840d30d4e9cded0041880ceb, type: 3}
+  m_Name: Test
+  m_EditorClassIdentifier: 
+  AmmoMaxStock: 80
+  AmmoMaxMag: 8
+  AmmoStock: 36
+  AmmoMag: 8
+  ReloadTime: 1
+  Damage: 10
+  BulletsPerShoot: 1
+  FireRate: 0.4
+  Precision: 0.1
+  canHold: 1
+  ClipShoot: {fileID: 0}
+  recoil: {x: 0, y: 0, z: 0}
+  snapiness: 0
+  returnSpeed: 0
+  AimFov: 50
+  SpeedToScoop: 0.1

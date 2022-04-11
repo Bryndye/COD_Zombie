@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerPoints : MonoBehaviour
 {
     BonusManager bonusManager;
+    PlayerWeapon pWeapon;
 
     [Header("Litteraly points")]
     public int Points;
@@ -28,6 +29,7 @@ public class PlayerPoints : MonoBehaviour
 
     private void Awake()
     {
+        pWeapon = GetComponent<PlayerWeapon>();
         FinalPoints = startingPoints;
     }
     private void Start()
@@ -104,9 +106,26 @@ public class PlayerPoints : MonoBehaviour
         }
     }
 
-    private void TimeLapse()
+    public void GetPointsByHit(TypeKill _kill = TypeKill.None)
     {
-
+        pWeapon.HitmarkerActiveUI();
+        switch (_kill)
+        {
+            case TypeKill.None:
+                GetPoints(10);
+                break;
+            case TypeKill.Head:
+                GetPoints(100);
+                break;
+            case TypeKill.cut:
+                GetPoints(130);
+                break;
+            case TypeKill.normal:
+                GetPoints(50);
+                break;
+            default:
+                break;
+        }
     }
 
     public void GetStats(bool _headShoot)

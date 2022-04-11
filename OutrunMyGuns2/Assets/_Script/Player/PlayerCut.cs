@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerCut : MonoBehaviour
 {
     PlayerWeapon playerWeapon;
+    PlayerPoints pPoints;
 
     [SerializeField] LayerMask ignoreLayerCut;
     [SerializeField] float distanceToCut = 2f;
@@ -16,6 +17,7 @@ public class PlayerCut : MonoBehaviour
     private void Awake()
     {
         playerWeapon = GetComponent<PlayerWeapon>();
+        pPoints = GetComponent<PlayerPoints>();
     }
 
     private void Update()
@@ -49,12 +51,12 @@ public class PlayerCut : MonoBehaviour
             //    Instantiate(PREFAB_TEST_SHOOT, _hit.point, Quaternion.identity);
             if (_hit.collider.TryGetComponent(out ZombieBehaviour _zb))
             {
-                _zb.TakeDamage(150, playerWeapon, TypeKill.cut);
+                _zb.TakeDamage(150, pPoints, TypeKill.cut);
                 Target = _zb.transform;
             }
             else if (_hit.collider.TryGetComponent(out PartOfBody _head))
             {
-                _head.TakeDamage(150, playerWeapon, TypeKill.cut);
+                _head.TakeDamage(150, pPoints, TypeKill.cut);
                 Target = _head.transform;
             }
             Debug.DrawRay(playerWeapon.CamTransfrom.position, playerWeapon.CamTransfrom.forward * 10, Color.blue, 1);
