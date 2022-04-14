@@ -3,8 +3,10 @@ using UnityEngine.AI;
 
 public enum ZombieStates
 {
+    Idle,
     Walk,
     Run,
+    Crawl,
     ThroughWall,
     Attack,
 }
@@ -68,7 +70,7 @@ public class ZombieBehaviour : MonoBehaviour
     void WalkSpeed()
     {
         bool _walkAnim = Random.Range(0, 2) == 1 ? true : false;
-        anim.SetBool("WalkWay1", _walkAnim);
+        anim.SetBool("Walk1", _walkAnim);
         MyState = ZombieStates.Walk;
         nav.speed = 1;
     }
@@ -79,6 +81,20 @@ public class ZombieBehaviour : MonoBehaviour
         anim.SetBool("Run", true);
         MyState = ZombieStates.Run;
         nav.speed = 3;
+    }
+
+    void CrawlSpeed()
+    {
+        anim.SetBool("Crawl", true);
+        MyState = ZombieStates.Walk;
+        nav.speed = 1.5f;
+    }
+
+    void IdleSpeed()
+    {
+        anim.SetBool("Idle", true);
+        MyState = ZombieStates.Idle;
+        nav.speed = 0;
     }
     #endregion
 
@@ -104,6 +120,10 @@ public class ZombieBehaviour : MonoBehaviour
         {
             PassThroughTheWindow();
         }
+        else if(MyState == ZombieStates.Idle)
+        {
+            anim.SetBool("Idle", true);
+        }
     }
 
     private void NavigateToTarget()
@@ -112,14 +132,22 @@ public class ZombieBehaviour : MonoBehaviour
         {
             return;
         }
+        Vector3 _targetPos = transform.position;
+
         if (WindowTarget != null)
         {
-            nav.SetDestination(GetPath(WindowTarget.position));
+            _targetPos = WindowTarget.position;
         }
         else if (Target != null)
         {
-            nav.SetDestination(GetPath(Target.position));
+            _targetPos = Target.position;
         }
+
+        if (NearMyTarget(_targetPos))
+        {
+            return;
+        }
+        nav.SetDestination(GetPath(_targetPos));
     }
 
     private Vector3 GetPath(Vector3 _pos)
@@ -134,6 +162,11 @@ public class ZombieBehaviour : MonoBehaviour
             pathComplete = false;
             return _pos;
         }
+    }
+
+    private bool NearMyTarget(Vector3 _target)
+    {
+        return Vector3.Distance(transform.position, _target) < 1f;
     }
 
     #region Window Manager
